@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdarg.h>
 #include "mgos_zvar.h"
 
 #ifdef MGOS_HAVE_MJS
@@ -10,6 +11,7 @@ extern void mg_zvar_free(mgos_zvar_t *, bool);
 extern mgos_zvar_t *mg_zvar_copy(mgos_zvar_t *, mgos_zvar_t *, bool);
 extern mgos_zvar_t *mg_zvar_nav_set(mgos_zvar_t *, bool);
 extern void mg_zvar_type_set(mgos_zvar_t *, enum mgos_zvar_type);
+extern int mg_zvar_json_printf(struct json_out *, mgos_zvar_t *);
 
 struct mg_zvar_dic_k {
   const char* name;
@@ -36,7 +38,7 @@ mgos_zvar_t *mg_zvar_dic_get(mgos_zvar_t *root, const char *name, bool create) {
   if (create) {
     // create a new variant if needed
     if (!i) i = calloc(1, sizeof(mgos_zvar_t));
-    i->type |= MGOS_ZVARIANT_TYPE_DIC;
+    i->type |= MGOS_ZVAR_TYPE_DIC;
     struct mg_zvar_dic_k *last_k = root->k;
     // find last key
     while(last_k && last_k->n) { last_k = last_k->n; };
@@ -118,7 +120,7 @@ mgos_zvar_t *mg_zvar_dic_copy(mgos_zvar_t *src, mgos_zvar_t *dest) {
 }
 
 bool mgos_zvar_is_dic(mgos_zvar_t *v) {
-  return (v ? ((v->type & MGOS_ZVARIANT_TYPE_DIC) == MGOS_ZVARIANT_TYPE_DIC) : false);
+  return (v ? ((v->type & MGOS_ZVAR_TYPE_DIC) == MGOS_ZVAR_TYPE_DIC) : false);
 }
 
 void mgos_zvar_dic_clear(mgos_zvar_t *v) {
@@ -128,7 +130,7 @@ void mgos_zvar_dic_clear(mgos_zvar_t *v) {
     if (k->value != v) {
       mg_zvar_free(k->value, true);
     } else {
-      mg_zvar_type_set(k->value, MGOS_ZVARIANT_TYPE_UNK);
+      mg_zvar_type_set(k->value, MGOS_ZVAR_TYPE_UNK);
       k->value->k = NULL;
     }
     
@@ -180,6 +182,54 @@ bool mgos_zvar_dic_bool_get(mgos_zvar_t *v, const char *name) {
 
 const char *mgos_zvar_dic_str_get(mgos_zvar_t *v, const char *name) {
   return mgos_zvar_str_get((mgos_zvar_is_dic(v) ? mg_zvar_dic_get(v, name, false) : NULL));
+}
+
+mgos_zvar_t *mgos_zvar_dic_get_at(mgos_zvar_t *v, int idx, const char **key) {
+  struct mg_zvar_dic_k *k = (v ? v->k : NULL);
+  while(k) {
+    if (idx <= 0) {
+      if (key) *key = k->name;
+      return k->value;
+    }
+    --idx;
+    k = k->n;
+  };
+  if (key) *key = NULL;
+  return NULL;
+}
+
+long mgos_zvar_dic_bigint_get_at(mgos_zvar_t *v, int idx, const char **key) {
+  return mgos_zvar_bigint_get((mgos_zvar_is_dic(v) ? mgos_zvar_dic_get_at(v, idx, key) : NULL));
+}
+
+bool mgos_zvar_dic_bool_get_at(mgos_zvar_t *v, int idx, const char **key) {
+  return mgos_zvar_bool_get((mgos_zvar_is_dic(v) ? mgos_zvar_dic_get_at(v, idx, key) : NULL));
+}
+
+double mgos_zvar_dic_decimal_get_at(mgos_zvar_t *v, int idx, const char **key) {
+  return mgos_zvar_decimal_get((mgos_zvar_is_dic(v) ? mgos_zvar_dic_get_at(v, idx, key) : NULL));
+}
+const char *mgos_zvar_dic_str_get_at(mgos_zvar_t *v, int idx, const char **key) {
+  return mgos_zvar_str_get((mgos_zvar_is_dic(v) ? mgos_zvar_dic_get_at(v, idx, key) : NULL));
+}
+
+int json_printf_zvar_dic_item(struct json_out *out, va_list *ap) {
+  mgos_zvar_t *v = va_arg(*ap, void *);
+  return mg_zvar_json_printf(out, v);
+}
+
+int mg_zvar_dic_json_printf(struct json_out *out, mgos_zvar_t *v) {
+  if (mgos_zvar_is_nav(v)) return json_printf(out, "%Q", NULL);
+  int len = 0;
+  len += json_printf(out, "{");
+  struct mg_zvar_dic_k *k = (v ? v->k : NULL);
+  while(k) {
+    len += json_printf(out, "%Q:%M", k->name, json_printf_zvar_dic_item, k->value);
+    k = k->n;
+    if (k) { len += json_printf(out, ", "); }
+  };
+  len += json_printf(out, "}");
+  return len;
 }
 
 #ifdef MGOS_HAVE_MJS

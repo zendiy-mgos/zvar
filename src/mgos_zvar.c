@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdarg.h>
 #include "mgos_zvar.h"
 
 #ifdef MGOS_HAVE_MJS
@@ -9,27 +10,28 @@ extern bool mgos_zvar_is_dic(mgos_zvar_t *);
 extern void mgos_zvar_dic_clear(mgos_zvar_t *);
 extern bool mg_zvar_dic_equals(mgos_zvar_t *, mgos_zvar_t *);
 extern mgos_zvar_t *mg_zvar_dic_copy(mgos_zvar_t *, mgos_zvar_t *);
+extern int mg_zvar_dic_json_printf(struct json_out *, mgos_zvar_t *v);
 
 enum mgos_zvar_type mgos_zvar_type(mgos_zvar_t *v) {
   if (v){
-    return (mgos_zvar_is_dic(v) ? (v->type ^ MGOS_ZVARIANT_TYPE_DIC) : v->type);
+    return (mgos_zvar_is_dic(v) ? (v->type ^ MGOS_ZVAR_TYPE_DIC) : v->type);
   }
-  return MGOS_ZVARIANT_TYPE_UNK;
+  return MGOS_ZVAR_TYPE_UNK;
 }
 
 void mg_zvar_type_set(mgos_zvar_t *v, enum mgos_zvar_type t) {
   if(v) {
-    v->type = (mgos_zvar_is_dic(v) ? (MGOS_ZVARIANT_TYPE_DIC | t) : t);
+    v->type = (mgos_zvar_is_dic(v) ? (MGOS_ZVAR_TYPE_DIC | t) : t);
   }
 }
 
 bool mgos_zvar_is_nav(mgos_zvar_t *v) {
-  return (mgos_zvar_type(v) == MGOS_ZVARIANT_TYPE_UNK);
+  return (mgos_zvar_type(v) == MGOS_ZVAR_TYPE_UNK);
 }
 
 void mg_zvar_close(mgos_zvar_t *v) {
   if (v) {
-    if ((v->type & MGOS_ZVARIANT_TYPE_STR) == MGOS_ZVARIANT_TYPE_STR) {
+    if ((v->type & MGOS_ZVAR_TYPE_STR) == MGOS_ZVAR_TYPE_STR) {
       free(v->value.s);
       v->value.s = NULL;
     }
@@ -43,13 +45,13 @@ mgos_zvar_t *mg_zvar_nav_set(mgos_zvar_t *v, bool skip_dic) {
     } else {
       mg_zvar_close(v);
     }
-    mg_zvar_type_set(v, MGOS_ZVARIANT_TYPE_UNK);
+    mg_zvar_type_set(v, MGOS_ZVAR_TYPE_UNK);
   }
   return v;
 }
 
 mgos_zvar_t *mgos_zvar_nav_set(mgos_zvar_t *v) {
-  mg_zvar_nav_set(v, false)->type = MGOS_ZVARIANT_TYPE_UNK;
+  mg_zvar_nav_set(v, false)->type = MGOS_ZVAR_TYPE_UNK;
   return v;
 }
 
@@ -64,15 +66,15 @@ bool mg_zvar_equals(mgos_zvar_t *v1, mgos_zvar_t *v2, bool skip_dic) {
 
     if (v1->type != v2->type) return false;
     switch(mgos_zvar_type(v1)) {
-      case MGOS_ZVARIANT_TYPE_BIGINT:
+      case MGOS_ZVAR_TYPE_BIGINT:
         return (v1->value.l == v2->value.l);
-      case MGOS_ZVARIANT_TYPE_DECIMAL:
+      case MGOS_ZVAR_TYPE_DECIMAL:
         return (v1->value.d == v2->value.d);
-      case MGOS_ZVARIANT_TYPE_BOOL:
+      case MGOS_ZVAR_TYPE_BOOL:
         return (v1->value.b == v2->value.b);
-      case MGOS_ZVARIANT_TYPE_STR:
+      case MGOS_ZVAR_TYPE_STR:
         return (strcmp(v1->value.s, v2->value.s) == 0);
-      case MGOS_ZVARIANT_TYPE_UNK:
+      case MGOS_ZVAR_TYPE_UNK:
         return true;
       default:
         return false;
@@ -92,15 +94,15 @@ mgos_zvar_t *mg_zvar_copy(mgos_zvar_t *src, mgos_zvar_t *dest, bool skip_dic) {
     }
 
     switch(mgos_zvar_type(src)) {
-      case MGOS_ZVARIANT_TYPE_BIGINT:
+      case MGOS_ZVAR_TYPE_BIGINT:
         return mgos_zvar_bigint_set(dest, src->value.l);
-      case MGOS_ZVARIANT_TYPE_DECIMAL:
+      case MGOS_ZVAR_TYPE_DECIMAL:
         return mgos_zvar_decimal_set(dest, src->value.d);
-      case MGOS_ZVARIANT_TYPE_BOOL:
+      case MGOS_ZVAR_TYPE_BOOL:
         return mgos_zvar_bool_set(dest, src->value.b);
-      case MGOS_ZVARIANT_TYPE_STR:
+      case MGOS_ZVAR_TYPE_STR:
         return mgos_zvar_str_set(dest, (const char *)src->value.s);
-      case MGOS_ZVARIANT_TYPE_UNK:
+      case MGOS_ZVAR_TYPE_UNK:
         return mg_zvar_nav_set(dest, skip_dic);
       default:
         return NULL;
@@ -116,7 +118,7 @@ mgos_zvar_t *mgos_zvar_copy(mgos_zvar_t *src, mgos_zvar_t *dest) {
 mgos_zvar_t *mgos_zvar_bigint_set(mgos_zvar_t *v, long value) {
   if (v) {
     mg_zvar_close(v);
-    mg_zvar_type_set(v, MGOS_ZVARIANT_TYPE_BIGINT);
+    mg_zvar_type_set(v, MGOS_ZVAR_TYPE_BIGINT);
     v->value.l = value;
   }
   return v;
@@ -125,7 +127,7 @@ mgos_zvar_t *mgos_zvar_bigint_set(mgos_zvar_t *v, long value) {
 mgos_zvar_t *mgos_zvar_bool_set(mgos_zvar_t *v, bool value) {
   if (v) {
     mg_zvar_close(v);
-    mg_zvar_type_set(v, MGOS_ZVARIANT_TYPE_BOOL);
+    mg_zvar_type_set(v, MGOS_ZVAR_TYPE_BOOL);
     v->value.b = value;
   }
   return v;
@@ -134,7 +136,7 @@ mgos_zvar_t *mgos_zvar_bool_set(mgos_zvar_t *v, bool value) {
 mgos_zvar_t *mgos_zvar_decimal_set(mgos_zvar_t *v, double value) {
   if (v) {
     mg_zvar_close(v);
-    mg_zvar_type_set(v, MGOS_ZVARIANT_TYPE_DECIMAL);
+    mg_zvar_type_set(v, MGOS_ZVAR_TYPE_DECIMAL);
     v->value.d = value;
   }
   return v;
@@ -144,7 +146,7 @@ mgos_zvar_t *mgos_zvar_str_set(mgos_zvar_t *v, const char *str) {
   if (v) {
     mg_zvar_nav_set(v, true);
     if (str) {
-      mg_zvar_type_set(v, MGOS_ZVARIANT_TYPE_STR);
+      mg_zvar_type_set(v, MGOS_ZVAR_TYPE_STR);
       v->value.s = strdup(str);
     }
   }
@@ -152,30 +154,59 @@ mgos_zvar_t *mgos_zvar_str_set(mgos_zvar_t *v, const char *str) {
 }
 
 long mgos_zvar_bigint_get(mgos_zvar_t *v) {
-  return ((mgos_zvar_type(v) == MGOS_ZVARIANT_TYPE_BIGINT) ? v->value.l : 0);
+  return ((mgos_zvar_type(v) == MGOS_ZVAR_TYPE_BIGINT) ? v->value.l : 0);
 }
 
 bool mgos_zvar_bool_get(mgos_zvar_t *v) {
-  return ((mgos_zvar_type(v) == MGOS_ZVARIANT_TYPE_BIGINT) ? v->value.b : false);
+  return ((mgos_zvar_type(v) == MGOS_ZVAR_TYPE_BIGINT) ? v->value.b : false);
 }
 
 double mgos_zvar_decimal_get(mgos_zvar_t *v) {
-  return ((mgos_zvar_type(v) == MGOS_ZVARIANT_TYPE_DECIMAL) ? v->value.d : 0);
+  return ((mgos_zvar_type(v) == MGOS_ZVAR_TYPE_DECIMAL) ? v->value.d : 0);
 }
 
 const char *mgos_zvar_str_get(mgos_zvar_t *v) {
-  return ((mgos_zvar_type(v) == MGOS_ZVARIANT_TYPE_STR) ? v->value.s : NULL);
+  return ((mgos_zvar_type(v) == MGOS_ZVAR_TYPE_STR) ? v->value.s : NULL);
 }
 
 void mg_zvar_free(mgos_zvar_t *v, bool skip_dic) {
   if (v) {
-    if (!skip_dic && ((v->type & MGOS_ZVARIANT_TYPE_DIC) == MGOS_ZVARIANT_TYPE_DIC)) {
+    if (!skip_dic && ((v->type & MGOS_ZVAR_TYPE_DIC) == MGOS_ZVAR_TYPE_DIC)) {
       mgos_zvar_dic_clear(v);
     } else {
       mg_zvar_close(v);    
     }
     free(v);
   }
+}
+
+int mg_zvar_json_printf(struct json_out *out, mgos_zvar_t *v) {
+  const char *fmt;
+  switch(mgos_zvar_type(v)) {
+    case MGOS_ZVAR_TYPE_BIGINT:
+      fmt = "%ld";
+      break;
+    case MGOS_ZVAR_TYPE_DECIMAL:
+      fmt = "%f";
+      break;
+    case MGOS_ZVAR_TYPE_BOOL:
+      fmt = "%B";
+      break;
+    case MGOS_ZVAR_TYPE_STR:
+      fmt = "%Q";
+      break;
+    default:
+      return json_printf(out, "%Q", NULL);
+  };
+  return json_printf(out, fmt, v->value);
+}
+
+int json_printf_zvar(struct json_out *out, va_list *ap) {
+  mgos_zvar_t *v = va_arg(*ap, void *);
+  if (mgos_zvar_is_dic(v)) {
+    return mg_zvar_dic_json_printf(out, v);
+  }
+  return mg_zvar_json_printf(out, v);
 }
 
 void mgos_zvar_free(mgos_zvar_t *v) {
