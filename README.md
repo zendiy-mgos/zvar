@@ -107,7 +107,7 @@ Copies the source variant to destination one.
 ```c
 mgos_zvar_t *mgos_zvar_nav_set(mgos_zvar_t *var);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -116,7 +116,7 @@ mgos_zvar_t *mgos_zvar_nav_set(mgos_zvar_t *var);
 ```c
 bool mgos_zvar_is_nav(mgos_zvar_t *var);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -125,7 +125,7 @@ bool mgos_zvar_is_nav(mgos_zvar_t *var);
 ```c
 mgos_zvar_t *mgos_zvar_bigint_set(mgos_zvar_t *var, long value);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -135,7 +135,7 @@ mgos_zvar_t *mgos_zvar_bigint_set(mgos_zvar_t *var, long value);
 ```c
 mgos_zvar_t *mgos_zvar_bool_set(mgos_zvar_t *var, bool value);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -145,7 +145,7 @@ mgos_zvar_t *mgos_zvar_bool_set(mgos_zvar_t *var, bool value);
 ```c
 mgos_zvar_t *mgos_zvar_decimal_set(mgos_zvar_t *var, double value);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -155,7 +155,7 @@ mgos_zvar_t *mgos_zvar_decimal_set(mgos_zvar_t *var, double value);
 ```c
 mgos_zvar_t *mgos_zvar_str_set(mgos_zvar_t *var, const char *str);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -165,7 +165,7 @@ mgos_zvar_t *mgos_zvar_str_set(mgos_zvar_t *var, const char *str);
 ```c
 long mgos_zvar_bigint_get(mgos_zvar_t *var);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -174,7 +174,7 @@ long mgos_zvar_bigint_get(mgos_zvar_t *var);
 ```c
 bool mgos_zvar_bool_get(mgos_zvar_t *var);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -183,7 +183,7 @@ bool mgos_zvar_bool_get(mgos_zvar_t *var);
 ```c
 double mgos_zvar_decimal_get(mgos_zvar_t *var);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -192,7 +192,7 @@ double mgos_zvar_decimal_get(mgos_zvar_t *var);
 ```c
 const char *mgos_zvar_str_get(mgos_zvar_t *var);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -201,7 +201,7 @@ const char *mgos_zvar_str_get(mgos_zvar_t *var);
 ```c
 int json_printf_zvar(struct json_out *out, va_list *ap);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -210,7 +210,7 @@ int json_printf_zvar(struct json_out *out, va_list *ap);
 ```c
 void mgos_zvar_free(mgos_zvar_t *var);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -219,7 +219,7 @@ void mgos_zvar_free(mgos_zvar_t *var);
 ```c
 bool mgos_zvar_is_dic(mgos_zvar_t *var);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -228,7 +228,7 @@ bool mgos_zvar_is_dic(mgos_zvar_t *var);
 ```c
 void mgos_zvar_dic_clear(mgos_zvar_t *var);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -237,7 +237,7 @@ void mgos_zvar_dic_clear(mgos_zvar_t *var);
 ```c
 int mgos_zvar_dic_count(mgos_zvar_t *var);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -246,7 +246,7 @@ int mgos_zvar_dic_count(mgos_zvar_t *var);
 ```c
 void mgos_zvar_dic_remove(mgos_zvar_t *var, const char *name);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -256,7 +256,7 @@ void mgos_zvar_dic_remove(mgos_zvar_t *var, const char *name);
 ```c
 long mgos_zvar_dic_bigint_get(mgos_zvar_t *var, const char *name);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -266,7 +266,7 @@ long mgos_zvar_dic_bigint_get(mgos_zvar_t *var, const char *name);
 ```c
 bool mgos_zvar_dic_bool_get(mgos_zvar_t *var, const char *name);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -276,7 +276,7 @@ bool mgos_zvar_dic_bool_get(mgos_zvar_t *var, const char *name);
 ```c
 double mgos_zvar_dic_decimal_get(mgos_zvar_t *var, const char *name);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -286,7 +286,7 @@ double mgos_zvar_dic_decimal_get(mgos_zvar_t *var, const char *name);
 ```c
 const char *mgos_zvar_dic_str_get(mgos_zvar_t *var, const char *name);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -296,7 +296,7 @@ const char *mgos_zvar_dic_str_get(mgos_zvar_t *var, const char *name);
 ```c
 mgos_zvar_t *mgos_zvar_dic_bigint_set(mgos_zvar_t *var, const char *name, long val);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -307,7 +307,7 @@ mgos_zvar_t *mgos_zvar_dic_bigint_set(mgos_zvar_t *var, const char *name, long v
 ```c
 mgos_zvar_t *mgos_zvar_dic_bool_set(mgos_zvar_t *var, const char *name, bool val);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -318,7 +318,7 @@ mgos_zvar_t *mgos_zvar_dic_bool_set(mgos_zvar_t *var, const char *name, bool val
 ```c
 mgos_zvar_t *mgos_zvar_dic_decimal_set(mgos_zvar_t *var, const char *name, double val);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -329,7 +329,7 @@ mgos_zvar_t *mgos_zvar_dic_decimal_set(mgos_zvar_t *var, const char *name, doubl
 ```c
 mgos_zvar_t *mgos_zvar_dic_str_set(mgos_zvar_t *var, const char *name, const char *str);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -340,7 +340,7 @@ mgos_zvar_t *mgos_zvar_dic_str_set(mgos_zvar_t *var, const char *name, const cha
 ```c
 mgos_zvar_t *mgos_zvar_dic_get_at(mgos_zvar_t *var, int idx, const char **key);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -351,7 +351,7 @@ mgos_zvar_t *mgos_zvar_dic_get_at(mgos_zvar_t *var, int idx, const char **key);
 ```c
 long mgos_zvar_dic_bigint_get_at(mgos_zvar_t *var, int idx, const char **key);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -362,7 +362,7 @@ long mgos_zvar_dic_bigint_get_at(mgos_zvar_t *var, int idx, const char **key);
 ```c
 bool mgos_zvar_dic_bool_get_at(mgos_zvar_t *var, int idx, const char **key);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -373,7 +373,7 @@ bool mgos_zvar_dic_bool_get_at(mgos_zvar_t *var, int idx, const char **key);
 ```c
 double mgos_zvar_dic_decimal_get_at(mgos_zvar_t *var, int idx, const char **key);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -384,7 +384,7 @@ double mgos_zvar_dic_decimal_get_at(mgos_zvar_t *var, int idx, const char **key)
 ```c
 const char *mgos_zvar_dic_str_get_at(mgos_zvar_t *var, int idx, const char **key);
 ```
-*Description*
+*Description to be set*
 
 |Parameter||
 |--|--|
@@ -392,4 +392,163 @@ const char *mgos_zvar_dic_str_get_at(mgos_zvar_t *var, int idx, const char **key
 |idx|Item index.|
 |key|Key name (optional)|
 ## JS API Reference
-*Under construction...*
+### Data-types
+```js
+ZenVar.TYPE.BOOL
+ZenVar.TYPE.BIGINT
+ZenVar.TYPE.DECIMAL
+ZenVar.TYPE.STR
+```
+### .typeOf()
+```js
+let type = ZenVar.typeOf(v);
+```
+Returns the variant data-type.
+
+|Parameter|Type||
+|--|--|--|
+|v|object|Variant instance pointer (mgos_zvar_ *)|
+### .isNaV(c)
+```js
+let isNav = ZenVar.isNav(v);
+```
+Returns `true` if the variant value is NaV (Not a Value), otherwise `false`.
+
+|Parameter|Type||
+|--|--|--|
+|v|object|Variant instance pointer (mgos_zvar_ *)|
+### .isDictionary()
+```js
+let isDic = ZenVar.isDictionary(v);
+```
+Returns `true` if the variant is a dictionary, otherwise `false`.
+
+|Parameter|Type||
+|--|--|--|
+|v|object|Variant instance pointer (mgos_zvar_ *)|
+### .bool()
+```js
+// get the value
+let out = ZenVar.bool(v);
+// set the value
+ZenVar.bool(v, val);
+```
+Gest or sets the boolean value.
+
+|Parameter|Type||
+|--|--|--|
+|v|object|Variant instance pointer (mgos_zvar_ *).|
+|val|boolean|Value to set.|
+### .int()
+```js
+// get the value
+let out = ZenVar.int(v);
+// set the value
+ZenVar.int(v, val);
+```
+Gest or sets the integer value.
+
+|Parameter|Type||
+|--|--|--|
+|v|object|Variant instance pointer (mgos_zvar_ *).|
+|val|integer|Value to set.|
+### .decimal()
+```js
+// get the value
+let out = ZenVar.decimal(v);
+// set the value
+ZenVar.decimal(v, val);
+```
+Gest or sets the decimal value.
+
+|Parameter|Type||
+|--|--|--|
+|v|object|Variant instance pointer (mgos_zvar_ *).|
+|val|decimal|Value to set.|
+### .string()
+```js
+// get the value
+let out = ZenVar.string(v);
+// set the value
+ZenVar.string(v, val);
+```
+Gest or sets the string value.
+
+|Parameter|Type||
+|--|--|--|
+|v|object|Variant instance pointer (mgos_zvar_ *).|
+|val|string|Value to set.|
+### .dictionary().count()
+```js
+let count = ZenVar.dictionary(v).count();
+```
+Returns the number of elements of the dictionary.
+
+|Parameter|Type||
+|--|--|--|
+|v|object|Variant instance pointer (mgos_zvar_ *)|
+### .dictionary().clear()
+```js
+ZenVar.dictionary(v).clear();
+```
+Removes all elements of the dictionary.
+
+|Parameter|Type||
+|--|--|--|
+|v|object|Variant instance pointer (mgos_zvar_ *)|
+### .dictionary().bool()
+```js
+// get the value
+let out = ZenVar.dictionary(v, key).bool();
+// set the value
+ZenVar.dictionary(v, key).bool(val)
+```
+Sets or gets the boolean value of the key element.
+
+|Parameter|Type||
+|--|--|--|
+|v|object|Variant instance pointer (mgos_zvar_ *)|
+|key|string|Element key name.|
+|val|boolean|Value to set.|
+### .dictionary().int()
+```js
+// get the value
+let out = ZenVar.dictionary(v, key).int();
+// set the value
+ZenVar.dictionary(v, key).int(val)
+```
+Sets or gets the integer value of the key element.
+
+|Parameter|Type||
+|--|--|--|
+|v|object|Variant instance pointer (mgos_zvar_ *)|
+|key|string|Element key name.|
+|val|integer|Value to set.|
+### .dictionary().decimal()
+```js
+// get the value
+let out = ZenVar.dictionary(v, key).decimal();
+// set the value
+ZenVar.dictionary(v, key).decimal(val)
+```
+Sets or gets the decimal value of the key element.
+
+|Parameter|Type||
+|--|--|--|
+|v|object|Variant instance pointer (mgos_zvar_ *)|
+|key|string|Element key name.|
+|val|decimal|Value to set.|
+### .dictionary().string()
+```js
+// get the value
+let out = ZenVar.dictionary(v, key).string();
+// set the value
+ZenVar.dictionary(v, key).string(val)
+```
+Sets or gets the string value of the key element.
+
+|Parameter|Type||
+|--|--|--|
+|v|object|Variant instance pointer (mgos_zvar_ *)|
+|key|string|Element key name.|
+|val|string|Value to set.|

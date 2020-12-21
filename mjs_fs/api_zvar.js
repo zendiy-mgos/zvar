@@ -24,8 +24,6 @@ let ZenVar = {
   _isdic: ffi('bool mgos_zvar_is_dic(void *)'),
   
   TYPE: {
-    UNKNOWN: 0,     //00000
-    DICTIONARY: 1,  //00001
     BOOL: 2,        //00010
     BIGINT: 4,      //00100
     DECIMAL: 8,     //01000
