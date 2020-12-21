@@ -97,7 +97,7 @@ Compares two variants. Returns `true` if they are equal, otherwise `false`.
 ```c
 mgos_zvar_t *mgos_zvar_copy(mgos_zvar_t *src, mgos_zvar_t *dest);
 ```
-Copies the source variant to destination one.
+Copies the source variant into the destination one.
 
 |Parameter||
 |--|--|
@@ -410,13 +410,22 @@ Returns the variant [data-type](https://github.com/zendiy-mgos/zvar#data-types).
 |v|object|Variant instance pointer (mgos_zvar_ *)|
 ### .isNaV(c)
 ```js
-let isNav = ZenVar.isNav(v);
+let isNav = ZenVar.isNaV(v);
 ```
 Returns `true` if the variant value is NaV (Not a Value), otherwise `false`.
 
 |Parameter|Type||
 |--|--|--|
 |v|object|Variant instance pointer (mgos_zvar_ *)|
+### .NaV()
+```js
+ZenVar.NaV(v);
+```
+Sets variant value to NaV (Not a Value).
+
+|Parameter|Type||
+|--|--|--|
+|src|object|Variant instance pointer (mgos_zvar_ *)|
 ### .isDictionary()
 ```js
 let isDic = ZenVar.isDictionary(v);
@@ -426,6 +435,26 @@ Returns `true` if the variant is a dictionary, otherwise `false`.
 |Parameter|Type||
 |--|--|--|
 |v|object|Variant instance pointer (mgos_zvar_ *)|
+### .equals()
+```js
+let eq = ZenVar.equals(v1, v2);
+```
+Returns `true` if the two variants are equal (same type and value), otherwise `false`. In case of dictionaries, it compares the keys.
+
+|Parameter|Type||
+|--|--|--|
+|v1|object|Variant instance pointer (mgos_zvar_ *)|
+|v2|object|Variant instance pointer (mgos_zvar_ *)|
+### .copy()
+```js
+ZenVar.copy(src, dest);
+```
+Copies the source variant into the destination one.
+
+|Parameter|Type||
+|--|--|--|
+|src|object|Source variant instance pointer (mgos_zvar_ *)|
+|dest|object|Destination variant instance pointer (mgos_zvar_ *)|
 ### .bool()
 ```js
 // get the value
@@ -496,6 +525,16 @@ Removes all elements of the dictionary.
 |Parameter|Type||
 |--|--|--|
 |v|object|Variant instance pointer (mgos_zvar_ *)|
+### .dictionary().remove()
+```js
+ZenVar.dictionary(v, key).remove();
+```
+Removes the element key from the dictionary. 
+
+|Parameter|Type||
+|--|--|--|
+|v|object|Variant instance pointer (mgos_zvar_ *)|
+|key|string|Element key name.|
 ### .dictionary().bool()
 ```js
 // get the value

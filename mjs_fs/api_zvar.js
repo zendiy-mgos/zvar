@@ -1,5 +1,12 @@
 let ZenVar = {
   _tof: ffi('int mgos_zvar_type(void *)'),
+  _isnav: ffi('bool mgos_zvar_is_nav(void *)'),
+  _isdic: ffi('bool mgos_zvar_is_dic(void *)'),
+
+  _eq: ffi('bool mgos_zvar_equals(void *, void *)'),
+  _cpy: ffi('void *mgos_zvar_copy(void *, void *)'),
+  _navs: ffi('void *mgos_zvar_nav_set(void *v)'),
+ 
   _bs: ffi('void* mgos_zvar_bool_set(void *, bool)'),
   _bg: ffi('bool mgos_zvar_bool_get(void *)'),
   _is: ffi('void* mgos_zvar_bigint_set(void *, long)'),
@@ -16,12 +23,12 @@ let ZenVar = {
   _dds: ffi('void *mgos_zvar_dic_decimal_set(void *, char *, double)'),
   _ddg: ffi('double mgos_zvar_dic_decimal_get(void *, char *)'),
   _dss: ffi('void *mgos_zvar_dic_str_set(void *, char *, char *)'),
-  _dsg: ffi('const char *mgos_zvar_dic_str_get(void *, char *)'),
+  _dsg: ffi('char *mgos_zvar_dic_str_get(void *, char *)'),
+  
   _dcnt: ffi('int mgos_zvar_dic_count(void *)'),
   _dcls: ffi('void mgos_zvar_dic_clear(void *)'),
+  _drm: ffi('void mgos_zvar_dic_remove(void *v, char *)'),
 
-  _isnav: ffi('bool mgos_zvar_is_nav(void *)'),
-  _isdic: ffi('bool mgos_zvar_is_dic(void *)'),
   
   TYPE: {
     BOOL: 2,        //00010
@@ -39,6 +46,16 @@ let ZenVar = {
   isDictionary: function(x) {
     return ZenVar._isdic(x);
   },
+
+  equals: function(x1, x2) {
+    return ZenVar._eq(x1, x2);
+  },
+  copy: function(src, dest) {
+    ZenVar._eq(src, dest);
+  },
+  NaV: function(x) {
+    ZenVar._eq(x);
+  },
   
   bool: function(x, val) {
     if (val === undefined) {
@@ -47,7 +64,6 @@ let ZenVar = {
     } else {
       // set
       ZenVar._bs(x, val);
-      return this;
     }
   },
   
@@ -58,7 +74,6 @@ let ZenVar = {
     } else {
       // set
       ZenVar._is(x, val);
-      return this;
     }
   },
   
@@ -69,7 +84,6 @@ let ZenVar = {
     } else {
       // set
       ZenVar._ds(x, val);
-      return this;
     }
   },
 
@@ -80,29 +94,27 @@ let ZenVar = {
     } else {
       // set
       ZenVar._ss(x, val);
-      return this;
     }
   },
 
   dictionary: function(x, key) {
     this._dic._key = key;
     this._dic._var = x;
-    this._parent = this;
     return this._dic;
   },
 
   _dic: {
     _key: null,
     _var: null,
-    _parent: null,
 
     count: function() {
       return ZenVar._dcnt(this._var);
     },
-
     clear: function() {
       ZenVar._dcls(this._var);
-      return this._parent;
+    },
+    remove: function() {
+      ZenVar._drm(this._var, this._key);
     },
 
     bool: function(val) {
@@ -112,7 +124,6 @@ let ZenVar = {
       } else {
         // set
         ZenVar._dbs(this._var, this._key, val);
-        return this._parent;
       }
     },
     
@@ -123,7 +134,6 @@ let ZenVar = {
       } else {
         // set
         ZenVar._dis(this._var, this._key, val);
-        return this._parent;
       }
     },
     
@@ -134,7 +144,6 @@ let ZenVar = {
       } else {
         // set
         ZenVar._dds(this._var, this._key, val);
-        return this._parent;
       }
     },
   
@@ -145,7 +154,6 @@ let ZenVar = {
       } else {
         // set
         ZenVar._dss(this._var, this._key, val);
-        return this._parent;
       }
     },
   },
