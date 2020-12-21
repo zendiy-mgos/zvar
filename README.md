@@ -403,7 +403,7 @@ ZenVar.TYPE.STR
 ```js
 let type = ZenVar.typeOf(v);
 ```
-Returns the variant data-type.
+Returns the variant [data-type](https://github.com/zendiy-mgos/zvar#data-types).
 
 |Parameter|Type||
 |--|--|--|
