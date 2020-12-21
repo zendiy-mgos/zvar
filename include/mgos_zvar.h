@@ -58,9 +58,9 @@ union mgos_zvar_value {
 #define MGOS_ZVAR_STR_SET(v)        MG_ZVAR_INIT(MGOS_ZVAR_TYPE_STR, (v ? strdup(v) : 0), s)
 
 #define MGOS_ZVAR_BIGINT            MGOS_ZVAR_BIGINT_SET(0)
-#define MGOS_ZVAR_BOOL              MGOS_ZVAR_BOOL_SET(0)
-#define MGOS_ZVAR_DECIMAL           MGOS_ZVAR_DECIMAL_SET(0)
-#define MGOS_ZVAR_STR               MGOS_ZVAR_STR_SET(0)
+#define MGOS_ZVAR_BOOL              MGOS_ZVAR_BOOL_SET(false)
+#define MGOS_ZVAR_DECIMAL           MGOS_ZVAR_DECIMAL_SET(0.0)
+#define MGOS_ZVAR_STR               MGOS_ZVAR_STR_SET(NULL)
 
 #define MG_ZVAR_NEW(n, t, v, uf)    mgos_zvar_t *n = calloc(1, sizeof(void *)); n->type = t; n->value.uf = v;
 

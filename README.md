@@ -1,22 +1,84 @@
 # ZenVar
 ## Overview
-Mongoose OS library implementing ZenVar variant object.
+Mongoose OS library implementing ZenVar variant object. A ZenVar is like a javascript `var`. It has not a strong data-type, but it can be any of the following:
+* Boolean (`bool` C type)
+* Integer (`long` C type)
+* Decimal (`double` C type)
+* String
+* Dictionary (key/value pairs of any type)
+
+**How to initialize a ZenVar** - Initializing a ZenVar is very easy, thanks to the following special MACROs.
+```c
+// Initialize as NaV (Not a Value)
+mgos_zvar_t var = MGOS_ZVAR_NAV;
+printf("Is NaV: %s", (mgos_zvar_is_nav(&var) ? "YES" : "NO"));
+
+// Integer
+mgos_zvar_t var = MGOS_ZVAR_BIGINT;           // set to default 0(zero)
+mgos_zvar_t var = MGOS_ZVAR_BIGINT_SET(22);
+printf("Integer value: %ld", mgos_zvar_bigint_get(&var));
+
+// Boolean
+mgos_zvar_t var = MGOS_ZVAR_BOOL;             // set to default false
+mgos_zvar_t var = MGOS_ZVAR_BOOL_SET(true);
+printf("Boolean value: %s", (mgos_zvar_bool_get(&var) == true ? "true" : "false"));
+
+// Decimal
+mgos_zvar_t var = MGOS_ZVAR_DECIMAL;          // set to default 0.0
+mgos_zvar_t var = MGOS_ZVAR_DECIMAL_SET(9.2);
+printf("Decimal value: %f", mgos_zvar_decimal_get(&var));
+
+// String
+mgos_zvar_t var = MGOS_ZVAR_STR;              // set to default NULL
+mgos_zvar_t var = MGOS_ZVAR_STR_SET("Mike");
+printf("String value: '%s'", mgos_zvar_str_get(&var));
+
+// Empty dictionary
+mgos_zvar_t var = MGOS_ZVAR_DIC;
+printf("Is dictionary: %s", (mgos_zvar_is_dic(&var) ? "YES" : "NO"));
+```
+**How to allocate a ZenVar** - Allocating a ZenVar is very easy, thanks to the following special MACROs.
+```c
+// NaV (Not a Value) pointer
+MGOS_ZVAR_NAV_NEW(var);
+printf("Is NaV: %s", (mgos_zvar_is_nav(var) ? "YES" : "NO"));
+
+// Integer pointer
+MGOS_ZVAR_BIGINT_NEW(var, v);
+printf("Integer value: %ld", mgos_zvar_bigint_get(var));
+
+// Boolean pointer
+MGOS_ZVAR_BOOL_NEW(var, 22);
+printf("Boolean value: %s", (mgos_zvar_bool_get(var) == true ? "true" : "false"));
+
+// Decimal pointer
+MGOS_ZVAR_DECIMAL_NEW(var, 9.2);
+printf("Decimal value: %f", mgos_zvar_decimal_get(var));
+
+// String pointer
+MGOS_ZVAR_STR_NEW(var, "Mike");
+printf("String value: '%s'", mgos_zvar_str_get(var));
+
+// Empty dictionary pointer
+MGOS_ZVAR_DIC_NEW(v);
+printf("Is dictionary: %s", (mgos_zvar_is_dic(var) ? "YES" : "NO"));
+```
 ## C/C++ API Reference
 ### enum mgos_zvar_type
 ```c
 enum mgos_zvar_type {
-  MGOS_ZVAR_TYPE_BOOL
-  MGOS_ZVAR_TYPE_BIGINT
-  MGOS_ZVAR_TYPE_DECIMAL
+  MGOS_ZVAR_TYPE_BOOL,
+  MGOS_ZVAR_TYPE_BIGINT,
+  MGOS_ZVAR_TYPE_DECIMAL,
   MGOS_ZVAR_TYPE_STR
 };
 ```
-ZenVar data types.
+ZenVar variant data-types.
 ### mgos_zvar_type()
 ```c
 enum mgos_zvar_type mgos_zvar_type(mgos_zvar_t *var);
 ```
-Returns the data type of the variant instance.
+Returns the variant [data-type](https://github.com/zendiy-mgos/zvar#enum-mgos_zvar_type).
 
 |Parameter||
 |--|--|
