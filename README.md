@@ -87,7 +87,7 @@ Returns the variant [data-type](https://github.com/zendiy-mgos/zvar#enum-mgos_zv
 ```c
 bool mgos_zvar_equals(mgos_zvar_t *var1, mgos_zvar_t *var2);
 ```
-Compares two variants. Returns `true` if they are equal, otherwise `false`.
+Compares two variants. Returns `true` if they are equal, otherwise `false`. In case of dictionaries, it compares dictionary elements.
 
 |Parameter||
 |--|--|
@@ -97,7 +97,7 @@ Compares two variants. Returns `true` if they are equal, otherwise `false`.
 ```c
 mgos_zvar_t *mgos_zvar_copy(mgos_zvar_t *src, mgos_zvar_t *dest);
 ```
-Copies the source variant into the destination one.
+Copies the source variant into the destination one. In case of dictionaries, dictionary elements are copied.
 
 |Parameter||
 |--|--|
@@ -107,7 +107,7 @@ Copies the source variant into the destination one.
 ```c
 mgos_zvar_t *mgos_zvar_nav_set(mgos_zvar_t *var);
 ```
-*Description to be set*
+Sets variant value to NaV (Not a Value).
 
 |Parameter||
 |--|--|
@@ -116,7 +116,7 @@ mgos_zvar_t *mgos_zvar_nav_set(mgos_zvar_t *var);
 ```c
 bool mgos_zvar_is_nav(mgos_zvar_t *var);
 ```
-*Description to be set*
+Returns `true` if the variant value is NaV (Not a Value), otherwise `false`.
 
 |Parameter||
 |--|--|
@@ -125,7 +125,7 @@ bool mgos_zvar_is_nav(mgos_zvar_t *var);
 ```c
 mgos_zvar_t *mgos_zvar_bigint_set(mgos_zvar_t *var, long value);
 ```
-*Description to be set*
+Sets the integer value.
 
 |Parameter||
 |--|--|
@@ -135,7 +135,7 @@ mgos_zvar_t *mgos_zvar_bigint_set(mgos_zvar_t *var, long value);
 ```c
 mgos_zvar_t *mgos_zvar_bool_set(mgos_zvar_t *var, bool value);
 ```
-*Description to be set*
+Sets the boolean value.
 
 |Parameter||
 |--|--|
@@ -145,7 +145,7 @@ mgos_zvar_t *mgos_zvar_bool_set(mgos_zvar_t *var, bool value);
 ```c
 mgos_zvar_t *mgos_zvar_decimal_set(mgos_zvar_t *var, double value);
 ```
-*Description to be set*
+Sets the boolean value.
 
 |Parameter||
 |--|--|
@@ -155,7 +155,7 @@ mgos_zvar_t *mgos_zvar_decimal_set(mgos_zvar_t *var, double value);
 ```c
 mgos_zvar_t *mgos_zvar_str_set(mgos_zvar_t *var, const char *str);
 ```
-*Description to be set*
+Sets the string value.
 
 |Parameter||
 |--|--|
@@ -165,7 +165,7 @@ mgos_zvar_t *mgos_zvar_str_set(mgos_zvar_t *var, const char *str);
 ```c
 long mgos_zvar_bigint_get(mgos_zvar_t *var);
 ```
-*Description to be set*
+Gets the integer value.
 
 |Parameter||
 |--|--|
@@ -174,7 +174,7 @@ long mgos_zvar_bigint_get(mgos_zvar_t *var);
 ```c
 bool mgos_zvar_bool_get(mgos_zvar_t *var);
 ```
-*Description to be set*
+Gets the boolean value.
 
 |Parameter||
 |--|--|
@@ -183,7 +183,7 @@ bool mgos_zvar_bool_get(mgos_zvar_t *var);
 ```c
 double mgos_zvar_decimal_get(mgos_zvar_t *var);
 ```
-*Description to be set*
+Gets the decimal value.
 
 |Parameter||
 |--|--|
@@ -192,7 +192,7 @@ double mgos_zvar_decimal_get(mgos_zvar_t *var);
 ```c
 const char *mgos_zvar_str_get(mgos_zvar_t *var);
 ```
-*Description to be set*
+Gets the string value.
 
 |Parameter||
 |--|--|
@@ -210,7 +210,7 @@ int json_printf_zvar(struct json_out *out, va_list *ap);
 ```c
 void mgos_zvar_free(mgos_zvar_t *var);
 ```
-*Description to be set*
+Closes and disposes variant instance.
 
 |Parameter||
 |--|--|
@@ -219,7 +219,7 @@ void mgos_zvar_free(mgos_zvar_t *var);
 ```c
 bool mgos_zvar_is_dic(mgos_zvar_t *var);
 ```
-*Description to be set*
+Returns `true` if the variant is a dictionary, otherwise `false`.
 
 |Parameter||
 |--|--|
@@ -228,7 +228,7 @@ bool mgos_zvar_is_dic(mgos_zvar_t *var);
 ```c
 void mgos_zvar_dic_clear(mgos_zvar_t *var);
 ```
-*Description to be set*
+Removes all dictionary elements.
 
 |Parameter||
 |--|--|
@@ -237,7 +237,7 @@ void mgos_zvar_dic_clear(mgos_zvar_t *var);
 ```c
 int mgos_zvar_dic_count(mgos_zvar_t *var);
 ```
-*Description to be set*
+Returns the number of elements in the dictionary.
 
 |Parameter||
 |--|--|
@@ -246,7 +246,7 @@ int mgos_zvar_dic_count(mgos_zvar_t *var);
 ```c
 void mgos_zvar_dic_remove(mgos_zvar_t *var, const char *name);
 ```
-*Description to be set*
+Removes the element from the dictionary.
 
 |Parameter||
 |--|--|
@@ -256,7 +256,7 @@ void mgos_zvar_dic_remove(mgos_zvar_t *var, const char *name);
 ```c
 long mgos_zvar_dic_bigint_get(mgos_zvar_t *var, const char *name);
 ```
-*Description to be set*
+Gets the integer value of the dictionary element.
 
 |Parameter||
 |--|--|
@@ -266,7 +266,7 @@ long mgos_zvar_dic_bigint_get(mgos_zvar_t *var, const char *name);
 ```c
 bool mgos_zvar_dic_bool_get(mgos_zvar_t *var, const char *name);
 ```
-*Description to be set*
+Gets the boolean value of the dictionary element.
 
 |Parameter||
 |--|--|
@@ -276,7 +276,7 @@ bool mgos_zvar_dic_bool_get(mgos_zvar_t *var, const char *name);
 ```c
 double mgos_zvar_dic_decimal_get(mgos_zvar_t *var, const char *name);
 ```
-*Description to be set*
+Gets the decimal value of the dictionary element.
 
 |Parameter||
 |--|--|
@@ -286,7 +286,7 @@ double mgos_zvar_dic_decimal_get(mgos_zvar_t *var, const char *name);
 ```c
 const char *mgos_zvar_dic_str_get(mgos_zvar_t *var, const char *name);
 ```
-*Description to be set*
+Gets the string value of the dictionary element.
 
 |Parameter||
 |--|--|
@@ -296,7 +296,7 @@ const char *mgos_zvar_dic_str_get(mgos_zvar_t *var, const char *name);
 ```c
 mgos_zvar_t *mgos_zvar_dic_bigint_set(mgos_zvar_t *var, const char *name, long val);
 ```
-*Description to be set*
+Sets the integer value of the dictionary element.
 
 |Parameter||
 |--|--|
@@ -307,7 +307,7 @@ mgos_zvar_t *mgos_zvar_dic_bigint_set(mgos_zvar_t *var, const char *name, long v
 ```c
 mgos_zvar_t *mgos_zvar_dic_bool_set(mgos_zvar_t *var, const char *name, bool val);
 ```
-*Description to be set*
+Sets the boolean value of the dictionary element.
 
 |Parameter||
 |--|--|
@@ -318,7 +318,7 @@ mgos_zvar_t *mgos_zvar_dic_bool_set(mgos_zvar_t *var, const char *name, bool val
 ```c
 mgos_zvar_t *mgos_zvar_dic_decimal_set(mgos_zvar_t *var, const char *name, double val);
 ```
-*Description to be set*
+Sets the decimal value of the dictionary element.
 
 |Parameter||
 |--|--|
@@ -329,7 +329,7 @@ mgos_zvar_t *mgos_zvar_dic_decimal_set(mgos_zvar_t *var, const char *name, doubl
 ```c
 mgos_zvar_t *mgos_zvar_dic_str_set(mgos_zvar_t *var, const char *name, const char *str);
 ```
-*Description to be set*
+Sets the string value of the dictionary element.
 
 |Parameter||
 |--|--|
@@ -340,56 +340,56 @@ mgos_zvar_t *mgos_zvar_dic_str_set(mgos_zvar_t *var, const char *name, const cha
 ```c
 mgos_zvar_t *mgos_zvar_dic_get_at(mgos_zvar_t *var, int idx, const char **key);
 ```
-*Description to be set*
+Gets the variant instance of the dictionary element at specified zero-based index.
 
 |Parameter||
 |--|--|
 |var|Variant instance.|
-|idx|Item index.|
+|idx|Item index (zero-based).|
 |key|Key name (optional)|
 ### mgos_zvar_dic_bigint_get_at()
 ```c
 long mgos_zvar_dic_bigint_get_at(mgos_zvar_t *var, int idx, const char **key);
 ```
-*Description to be set*
+Gets the integer value of the dictionary element at specified zero-based index.
 
 |Parameter||
 |--|--|
 |var|Variant instance.|
-|idx|Item index.|
+|idx|Item index (zero-based).|
 |key|Key name (optional)|
 ### mgos_zvar_dic_bool_get_at()
 ```c
 bool mgos_zvar_dic_bool_get_at(mgos_zvar_t *var, int idx, const char **key);
 ```
-*Description to be set*
+Gets the boolean value of the dictionary element at specified zero-based index.
 
 |Parameter||
 |--|--|
 |var|Variant instance.|
-|idx|Item index.|
+|idx|Item index (zero-based).|
 |key|Key name (optional)|
 ### mgos_zvar_dic_decimal_get_at()
 ```c
 double mgos_zvar_dic_decimal_get_at(mgos_zvar_t *var, int idx, const char **key);
 ```
-*Description to be set*
+Gets the decimal value of the dictionary element at specified zero-based index.
 
 |Parameter||
 |--|--|
 |var|Variant instance.|
-|idx|Item index.|
+|idx|Item index (zero-based).|
 |key|Key name (optional)|
 ### mgos_zvar_dic_str_get_at()
 ```c
 const char *mgos_zvar_dic_str_get_at(mgos_zvar_t *var, int idx, const char **key);
 ```
-*Description to be set*
+Gets the string value of the dictionary element at specified zero-based index.
 
 |Parameter||
 |--|--|
 |var|Variant instance.|
-|idx|Item index.|
+|idx|Item index (zero-based).|
 |key|Key name (optional)|
 ## JS API Reference
 ### Data-types
@@ -439,7 +439,7 @@ Returns `true` if the variant is a dictionary, otherwise `false`.
 ```js
 let eq = ZenVar.equals(v1, v2);
 ```
-Returns `true` if the two variants are equal (same type and value), otherwise `false`. In case of dictionaries, it compares the keys.
+Compares two variants. Returns `true` if they are equal, otherwise `false`. In case of dictionaries, it compares dictionary elements.
 
 |Parameter|Type||
 |--|--|--|
@@ -449,7 +449,7 @@ Returns `true` if the two variants are equal (same type and value), otherwise `f
 ```js
 ZenVar.copy(src, dest);
 ```
-Copies the source variant into the destination one.
+Copies the source variant into the destination one. In case of dictionaries, dictionary elements are copied.
 
 |Parameter|Type||
 |--|--|--|
@@ -511,7 +511,7 @@ Gest or sets the string value.
 ```js
 let count = ZenVar.dictionary(v).count();
 ```
-Returns the number of elements of the dictionary.
+Returns the number of elements in the dictionary.
 
 |Parameter|Type||
 |--|--|--|
@@ -520,7 +520,7 @@ Returns the number of elements of the dictionary.
 ```js
 ZenVar.dictionary(v).clear();
 ```
-Removes all elements of the dictionary.
+Removes all dictionary elements.
 
 |Parameter|Type||
 |--|--|--|
@@ -529,7 +529,7 @@ Removes all elements of the dictionary.
 ```js
 ZenVar.dictionary(v, key).remove();
 ```
-Removes the element key from the dictionary. 
+Removes the element from the dictionary. 
 
 |Parameter|Type||
 |--|--|--|
@@ -542,7 +542,7 @@ let out = ZenVar.dictionary(v, key).bool();
 // set the value
 ZenVar.dictionary(v, key).bool(val)
 ```
-Sets or gets the boolean value of the key element.
+Sets or gets the boolean value of the dictionary element.
 
 |Parameter|Type||
 |--|--|--|
@@ -556,7 +556,7 @@ let out = ZenVar.dictionary(v, key).int();
 // set the value
 ZenVar.dictionary(v, key).int(val)
 ```
-Sets or gets the integer value of the key element.
+Sets or gets the integer value of the dictionary element.
 
 |Parameter|Type||
 |--|--|--|
@@ -570,7 +570,7 @@ let out = ZenVar.dictionary(v, key).decimal();
 // set the value
 ZenVar.dictionary(v, key).decimal(val)
 ```
-Sets or gets the decimal value of the key element.
+Sets or gets the decimal value of the dictionary element.
 
 |Parameter|Type||
 |--|--|--|
@@ -584,7 +584,7 @@ let out = ZenVar.dictionary(v, key).string();
 // set the value
 ZenVar.dictionary(v, key).string(val)
 ```
-Sets or gets the string value of the key element.
+Sets or gets the string value of the dictionary element.
 
 |Parameter|Type||
 |--|--|--|
