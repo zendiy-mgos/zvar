@@ -47,34 +47,35 @@ union mgos_zvar_value {
    char *s;
 };
 
-#define MG_ZVAR_INIT(t,v,uf) { .type=t, .value.uf = v, .k = NULL }
+#define MG_ZVAR_INIT(t,v,uf,sz) { .type=t, .value.uf=v, .k=NULL, .v_size=sz }
 
-#define MGOS_ZVAR_NAV               MG_ZVAR_INIT(MGOS_ZVAR_TYPE_UNK, 0, d)
-#define MGOS_ZVAR_DIC               MG_ZVAR_INIT(MGOS_ZVAR_TYPE_DIC, 0, d)
+#define MGOS_ZVAR_NAV               MG_ZVAR_INIT(MGOS_ZVAR_TYPE_UNK, 0, d, 0)
+#define MGOS_ZVAR_DIC               MG_ZVAR_INIT(MGOS_ZVAR_TYPE_DIC, 0, d, 0)
 
-#define MGOS_ZVAR_BIGINT_SET(v)     MG_ZVAR_INIT(MGOS_ZVAR_TYPE_BIGINT, v, l)
-#define MGOS_ZVAR_BOOL_SET(v)       MG_ZVAR_INIT(MGOS_ZVAR_TYPE_BOOL, v, b)
-#define MGOS_ZVAR_DECIMAL_SET(v)    MG_ZVAR_INIT(MGOS_ZVAR_TYPE_DECIMAL, v, d)
-#define MGOS_ZVAR_STR_SET(v)        MG_ZVAR_INIT(MGOS_ZVAR_TYPE_STR, (v ? strdup(v) : 0), s)
+#define MGOS_ZVAR_BIGINT_SET(v)     MG_ZVAR_INIT(MGOS_ZVAR_TYPE_BIGINT, v, l, sizeof(long))
+#define MGOS_ZVAR_BOOL_SET(v)       MG_ZVAR_INIT(MGOS_ZVAR_TYPE_BOOL, v, b, sizeof(bool))
+#define MGOS_ZVAR_DECIMAL_SET(v)    MG_ZVAR_INIT(MGOS_ZVAR_TYPE_DECIMAL, v, d, sizeof(bool))
+#define MGOS_ZVAR_STR_SET(v)        MG_ZVAR_INIT(MGOS_ZVAR_TYPE_STR, (v ? strdup(v) : 0), s, (v ? (strlen(v)+1) : 0))
 
 #define MGOS_ZVAR_BIGINT            MGOS_ZVAR_BIGINT_SET(0)
 #define MGOS_ZVAR_BOOL              MGOS_ZVAR_BOOL_SET(false)
 #define MGOS_ZVAR_DECIMAL           MGOS_ZVAR_DECIMAL_SET(0.0)
 #define MGOS_ZVAR_STR               MGOS_ZVAR_STR_SET(NULL)
 
-#define MG_ZVAR_NEW(n, t, v, uf)    mgos_zvar_t *n = calloc(1, sizeof(void *)); n->type = t; n->value.uf = v;
+#define MG_ZVAR_NEW(n, t, v, uf,sz)    mgos_zvar_t *n = calloc(1, sizeof(void *)); n->type = t; n->value.uf = v; n->v_size=sz;
 
-#define MGOS_ZVAR_NAV_NEW(n)        MG_ZVAR_NEW(n, MGOS_ZVAR_TYPE_UNK, 0, d)
-#define MGOS_ZVAR_DIC_NEW(n)        MG_ZVAR_NEW(n, MGOS_ZVAR_TYPE_DIC, 0, d)
-#define MGOS_ZVAR_BIGINT_NEW(n, v)   MG_ZVAR_NEW(n, MGOS_ZVAR_TYPE_BIGINT, v, l)
-#define MGOS_ZVAR_BOOL_NEW(n, v)     MG_ZVAR_NEW(n, MGOS_ZVAR_TYPE_BOOL, v, b)
-#define MGOS_ZVAR_DECIMAL_NEW(n, v)  MG_ZVAR_NEW(n, MGOS_ZVAR_TYPE_DECIMAL, v, d)
-#define MGOS_ZVAR_STR_NEW(n, v)      MG_ZVAR_NEW(n, MGOS_ZVAR_TYPE_STR, strdup(v), s)
+#define MGOS_ZVAR_NAV_NEW(n)        MG_ZVAR_NEW(n, MGOS_ZVAR_TYPE_UNK, 0, d, 0)
+#define MGOS_ZVAR_DIC_NEW(n)        MG_ZVAR_NEW(n, MGOS_ZVAR_TYPE_DIC, 0, d, 0)
+#define MGOS_ZVAR_BIGINT_NEW(n, v)   MG_ZVAR_NEW(n, MGOS_ZVAR_TYPE_BIGINT, v, l, sizeof(long))
+#define MGOS_ZVAR_BOOL_NEW(n, v)     MG_ZVAR_NEW(n, MGOS_ZVAR_TYPE_BOOL, v, b, sizeof(bool))
+#define MGOS_ZVAR_DECIMAL_NEW(n, v)  MG_ZVAR_NEW(n, MGOS_ZVAR_TYPE_DECIMAL, v, sizeof(double))
+#define MGOS_ZVAR_STR_NEW(n, v)      MG_ZVAR_NEW(n, MGOS_ZVAR_TYPE_STR, (v ? strdup(v) : NULL), (v ? (strlen(v)+1) : NULL))
 
 
 typedef struct mgos_zvariant {
   enum mgos_zvar_type type; 
   union mgos_zvar_value value;
+  size_t v_size;
   void *k;
 } mgos_zvar_t;
 

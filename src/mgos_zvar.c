@@ -35,6 +35,7 @@ void mg_zvar_close(mgos_zvar_t *v) {
       free(v->value.s);
       v->value.s = NULL;
     }
+    v->v_size = 0;
   }
 }
 
@@ -120,6 +121,7 @@ mgos_zvar_t *mgos_zvar_bigint_set(mgos_zvar_t *v, long value) {
     mg_zvar_close(v);
     mg_zvar_type_set(v, MGOS_ZVAR_TYPE_BIGINT);
     v->value.l = value;
+    v->v_size = sizeof(long);
   }
   return v;
 }
@@ -129,6 +131,7 @@ mgos_zvar_t *mgos_zvar_bool_set(mgos_zvar_t *v, bool value) {
     mg_zvar_close(v);
     mg_zvar_type_set(v, MGOS_ZVAR_TYPE_BOOL);
     v->value.b = value;
+    v->v_size = sizeof(bool);
   }
   return v;
 }
@@ -138,16 +141,27 @@ mgos_zvar_t *mgos_zvar_decimal_set(mgos_zvar_t *v, double value) {
     mg_zvar_close(v);
     mg_zvar_type_set(v, MGOS_ZVAR_TYPE_DECIMAL);
     v->value.d = value;
+    v->v_size = sizeof(double);
   }
   return v;
 }
 
 mgos_zvar_t *mgos_zvar_str_set(mgos_zvar_t *v, const char *str) {
   if (v) {
+    // try to optimize string allocation
+    if ((mgos_zvar_type(v) == MGOS_ZVAR_TYPE_STR) && str && v->value.s) {
+      if (strlen(str) < v->v_size) {
+        // re-use previously allocated buffer
+        strcpy(v->value.s, str);
+        return v;
+      }
+    }
+
     mg_zvar_nav_set(v, true);
     if (str) {
       mg_zvar_type_set(v, MGOS_ZVAR_TYPE_STR);
       v->value.s = strdup(str);
+      v->v_size = (strlen(str) + 1);
     }
   }
   return v;
