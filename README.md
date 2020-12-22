@@ -201,11 +201,23 @@ Gets the string value.
 ```c
 int json_printf_zvar(struct json_out *out, va_list *ap);
 ```
-*Description to be set*
+Helper %M callback that prints the variant. Consumes a mgos_zvar_t *. Returns number of printed bytes. This helper can be used in `json_printf`, `json_fprintf` or `json_asprintf` functions (see Mongoose OS [JSON library](https://mongoose-os.com/docs/mongoose-os/api/core/frozen.h.md) for more details).
+```c
+// Example #1: print a decimal variant
+mgos_zvar_t var = MGOS_ZVAR_DECIMAL_SET(51.2);
+char *buf = json_asprintf("{humidity: %M}", json_printf_zvar, &var);
+printf("%s", buf); // '{"humidity": 51.2}'
+free(buf):
 
-|Parameter||
-|--|--|
-|||
+// Example #2: print a dictionary
+mgos_zvar_t var = MGOS_ZVAR_DIC;
+mgos_zvar_dic_decimal_set(&var, "humidity", 51.2);
+mgos_zvar_dic_bool_set(&var, "rain", true);
+mgos_zvar_dic_str_set(&var, "weather", "rainy");
+char *buf = json_asprintf("{state: %M}", json_printf_zvar, &var);
+printf("%s", buf); // '{"state": {"humidity": 51.2, "rain": true, "weather": "rainy"}}'
+free(buf):
+```
 ### mgos_zvar_free()
 ```c
 void mgos_zvar_free(mgos_zvar_t *var);
@@ -244,153 +256,153 @@ Returns the number of elements in the dictionary.
 |var|Variant instance.|
 ### mgos_zvar_dic_remove()
 ```c
-void mgos_zvar_dic_remove(mgos_zvar_t *var, const char *name);
+void mgos_zvar_dic_remove(mgos_zvar_t *var, const char *key);
 ```
 Removes the element from the dictionary.
 
 |Parameter||
 |--|--|
 |var|Variant instance.|
-|name|Key name.|
+|key|Key name.|
 ### mgos_zvar_dic_bigint_get()
 ```c
-long mgos_zvar_dic_bigint_get(mgos_zvar_t *var, const char *name);
+long mgos_zvar_dic_bigint_get(mgos_zvar_t *var, const char *key);
 ```
 Gets the integer value of the dictionary element.
 
 |Parameter||
 |--|--|
 |var|Variant instance.|
-|name|Key name.|
+|key|Key name.|
 ### mgos_zvar_dic_bool_get()
 ```c
-bool mgos_zvar_dic_bool_get(mgos_zvar_t *var, const char *name);
+bool mgos_zvar_dic_bool_get(mgos_zvar_t *var, const char *key);
 ```
 Gets the boolean value of the dictionary element.
 
 |Parameter||
 |--|--|
 |var|Variant instance.|
-|name|Key name.|
+|key|Key name.|
 ### mgos_zvar_dic_decimal_get()
 ```c
-double mgos_zvar_dic_decimal_get(mgos_zvar_t *var, const char *name);
+double mgos_zvar_dic_decimal_get(mgos_zvar_t *var, const char *key);
 ```
 Gets the decimal value of the dictionary element.
 
 |Parameter||
 |--|--|
 |var|Variant instance.|
-|name|Key name.|
+|key|Key name.|
 ### mgos_zvar_dic_str_get()
 ```c
-const char *mgos_zvar_dic_str_get(mgos_zvar_t *var, const char *name);
+const char *mgos_zvar_dic_str_get(mgos_zvar_t *var, const char *key);
 ```
 Gets the string value of the dictionary element.
 
 |Parameter||
 |--|--|
 |var|Variant instance.|
-|name|Key name.|
+|key|Key name.|
 ### mgos_zvar_dic_bigint_set()
 ```c
-mgos_zvar_t *mgos_zvar_dic_bigint_set(mgos_zvar_t *var, const char *name, long val);
+mgos_zvar_t *mgos_zvar_dic_bigint_set(mgos_zvar_t *var, const char *key, long val);
 ```
 Sets the integer value of the dictionary element.
 
 |Parameter||
 |--|--|
 |var|Variant instance.|
-|name|Key name.|
+|key|Key name.|
 |val|Value to set.|
 ### mgos_zvar_dic_bool_set()
 ```c
-mgos_zvar_t *mgos_zvar_dic_bool_set(mgos_zvar_t *var, const char *name, bool val);
+mgos_zvar_t *mgos_zvar_dic_bool_set(mgos_zvar_t *var, const char *key, bool val);
 ```
 Sets the boolean value of the dictionary element.
 
 |Parameter||
 |--|--|
 |var|Variant instance.|
-|name|Key name.|
+|key|Key name.|
 |val|Value to set.|
 ### mgos_zvar_t *mgos_zvar_dic_decimal_set()
 ```c
-mgos_zvar_t *mgos_zvar_dic_decimal_set(mgos_zvar_t *var, const char *name, double val);
+mgos_zvar_t *mgos_zvar_dic_decimal_set(mgos_zvar_t *var, const char *key, double val);
 ```
 Sets the decimal value of the dictionary element.
 
 |Parameter||
 |--|--|
 |var|Variant instance.|
-|name|Key name.|
+|key|Key name.|
 |val|Value to set.|
 ### mgos_zvar_dic_str_set()
 ```c
-mgos_zvar_t *mgos_zvar_dic_str_set(mgos_zvar_t *var, const char *name, const char *str);
+mgos_zvar_t *mgos_zvar_dic_str_set(mgos_zvar_t *var, const char *key, const char *str);
 ```
 Sets the string value of the dictionary element.
 
 |Parameter||
 |--|--|
 |var|Variant instance.|
-|name|Key name.|
+|key|Key name.|
 |str|String to set.|
 ### mgos_zvar_dic_get_at()
 ```c
 mgos_zvar_t *mgos_zvar_dic_get_at(mgos_zvar_t *var, int idx, const char **key);
 ```
-Gets the variant instance of the dictionary element at specified zero-based index.
+Gets the variant instance of the dictionary element at specified zero-based index. If the `key` parameter is not `NULL`, the element key name is returned. 
 
 |Parameter||
 |--|--|
 |var|Variant instance.|
 |idx|Item index (zero-based).|
-|key|Key name (optional)|
+|key|Key name of returned element (optional).|
 ### mgos_zvar_dic_bigint_get_at()
 ```c
 long mgos_zvar_dic_bigint_get_at(mgos_zvar_t *var, int idx, const char **key);
 ```
-Gets the integer value of the dictionary element at specified zero-based index.
+Gets the integer value of the dictionary element at specified zero-based index. If the `key` parameter is not `NULL`, the element key name is returned.
 
 |Parameter||
 |--|--|
 |var|Variant instance.|
 |idx|Item index (zero-based).|
-|key|Key name (optional)|
+|key|Key name of returned element (optional).|
 ### mgos_zvar_dic_bool_get_at()
 ```c
 bool mgos_zvar_dic_bool_get_at(mgos_zvar_t *var, int idx, const char **key);
 ```
-Gets the boolean value of the dictionary element at specified zero-based index.
+Gets the boolean value of the dictionary element at specified zero-based index. If the `key` parameter is not `NULL`, the element key name is returned.
 
 |Parameter||
 |--|--|
 |var|Variant instance.|
 |idx|Item index (zero-based).|
-|key|Key name (optional)|
+|key|Key name of returned element (optional).|
 ### mgos_zvar_dic_decimal_get_at()
 ```c
 double mgos_zvar_dic_decimal_get_at(mgos_zvar_t *var, int idx, const char **key);
 ```
-Gets the decimal value of the dictionary element at specified zero-based index.
+Gets the decimal value of the dictionary element at specified zero-based index. If the `key` parameter is not `NULL`, the element key name is returned.
 
 |Parameter||
 |--|--|
 |var|Variant instance.|
 |idx|Item index (zero-based).|
-|key|Key name (optional)|
+|key|Key name of returned element (optional).|
 ### mgos_zvar_dic_str_get_at()
 ```c
 const char *mgos_zvar_dic_str_get_at(mgos_zvar_t *var, int idx, const char **key);
 ```
-Gets the string value of the dictionary element at specified zero-based index.
+Gets the string value of the dictionary element at specified zero-based index. If the `key` parameter is not `NULL`, the element key name is returned.
 
 |Parameter||
 |--|--|
 |var|Variant instance.|
 |idx|Item index (zero-based).|
-|key|Key name (optional)|
+|key|Key name of returned element (optional).|
 ## JS API Reference
 ### Data-types
 ```js
