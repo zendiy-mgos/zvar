@@ -5,12 +5,12 @@ let ZenVar = {
 
   _eq: ffi('bool mgos_zvar_equals(void *, void *)'),
   _cpy: ffi('void *mgos_zvar_copy(void *, void *)'),
-  _navs: ffi('void *mgos_zvar_nav_set(void *v)'),
+  _navs: ffi('void *mgos_zvar_nav_set(void *)'),
  
   _bs: ffi('void* mgos_zvar_bool_set(void *, bool)'),
   _bg: ffi('bool mgos_zvar_bool_get(void *)'),
-  _is: ffi('void* mgos_zvar_bigint_set(void *, long)'),
-  _ig: ffi('long mgos_zvar_bigint_get(void *)'),
+  _is: ffi('void* mgos_zvar_bigint_set(void *, int)'),
+  _ig: ffi('int mgos_zvar_bigint_get(void *)'),
   _ds: ffi('void* mgos_zvar_decimal_set(void *, double)'),
   _dg: ffi('double mgos_zvar_decimal_get(void *)'),
   _ss: ffi('void* mgos_zvar_str_set(void *, char *)'),
@@ -18,8 +18,8 @@ let ZenVar = {
 
   _dbs: ffi('void *mgos_zvar_dic_bool_set(void *, char *, bool)'),
   _dbg: ffi('bool mgos_zvar_dic_bool_get(void *, char *)'),
-  _dis: ffi('void *mgos_zvar_dic_bigint_set(void *, char *, long)'),
-  _dig: ffi('long mgos_zvar_dic_bigint_get(void *, char *)'),
+  _dis: ffi('void *mgos_zvar_dic_bigint_set(void *, char *, int)'),
+  _dig: ffi('int mgos_zvar_dic_bigint_get(void *, char *)'),
   _dds: ffi('void *mgos_zvar_dic_decimal_set(void *, char *, double)'),
   _ddg: ffi('double mgos_zvar_dic_decimal_get(void *, char *)'),
   _dss: ffi('void *mgos_zvar_dic_str_set(void *, char *, char *)'),
@@ -27,8 +27,8 @@ let ZenVar = {
   
   _dcnt: ffi('int mgos_zvar_dic_count(void *)'),
   _dcls: ffi('void mgos_zvar_dic_clear(void *)'),
-  _drm: ffi('void mgos_zvar_dic_remove(void *v, char *)'),
-
+  _drm: ffi('void mgos_zvar_dic_remove(void *, char *)'),
+  _cont: ffi('bool mgos_zvar_dic_contains(void *, char *)'),
   
   TYPE: {
     BOOL: 2,        //00010
@@ -115,6 +115,9 @@ let ZenVar = {
     },
     remove: function() {
       ZenVar._drm(this._var, this._key);
+    },
+    exists: function() {
+      return ZenVar._cont(this._var, this._key);
     },
 
     bool: function(val) {

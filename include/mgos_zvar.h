@@ -108,17 +108,20 @@ void mgos_zvar_free(mgos_zvar_t *v);
 bool mgos_zvar_is_dic(mgos_zvar_t *v);
 void mgos_zvar_dic_clear(mgos_zvar_t *v);
 int mgos_zvar_dic_count(mgos_zvar_t *v);
-void mgos_zvar_dic_remove(mgos_zvar_t *v, const char *name);
+void mgos_zvar_dic_remove(mgos_zvar_t *v, const char *key);
 
-long mgos_zvar_dic_bigint_get(mgos_zvar_t *v, const char *name);
-bool mgos_zvar_dic_bool_get(mgos_zvar_t *v, const char *name);
-double mgos_zvar_dic_decimal_get(mgos_zvar_t *v, const char *name);
-const char *mgos_zvar_dic_str_get(mgos_zvar_t *v, const char *name);
+mgos_zvar_t *mgos_zvar_dic_get(mgos_zvar_t *v, const char *key);
+bool mgos_zvar_dic_contains(mgos_zvar_t *v, const char *key);
 
-mgos_zvar_t *mgos_zvar_dic_bigint_set(mgos_zvar_t *v, const char *name, long val);
-mgos_zvar_t *mgos_zvar_dic_bool_set(mgos_zvar_t *v, const char *name, bool val);
-mgos_zvar_t *mgos_zvar_dic_decimal_set(mgos_zvar_t *v, const char *name, double val);
-mgos_zvar_t *mgos_zvar_dic_str_set(mgos_zvar_t *v, const char *name, const char *val);
+long mgos_zvar_dic_bigint_get(mgos_zvar_t *v, const char *key);
+bool mgos_zvar_dic_bool_get(mgos_zvar_t *v, const char *key);
+double mgos_zvar_dic_decimal_get(mgos_zvar_t *v, const char *key);
+const char *mgos_zvar_dic_str_get(mgos_zvar_t *v, const char *key);
+
+mgos_zvar_t *mgos_zvar_dic_bigint_set(mgos_zvar_t *v, const char *key, long val);
+mgos_zvar_t *mgos_zvar_dic_bool_set(mgos_zvar_t *v, const char *key, bool val);
+mgos_zvar_t *mgos_zvar_dic_decimal_set(mgos_zvar_t *v, const char *key, double val);
+mgos_zvar_t *mgos_zvar_dic_str_set(mgos_zvar_t *v, const char *key, const char *val);
 
 mgos_zvar_t *mgos_zvar_dic_get_at(mgos_zvar_t *v, int idx, const char **key);
 long mgos_zvar_dic_bigint_get_at(mgos_zvar_t *v, int idx, const char **key);

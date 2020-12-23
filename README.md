@@ -264,6 +264,27 @@ Removes the element from the dictionary.
 |--|--|
 |var|Variant instance.|
 |key|Key name.|
+### mgos_zvar_dic_contains()
+```c
+bool mgos_zvar_dic_contains(mgos_zvar_t *var, const char *key);
+```
+Returns `true` if the dictionary contains the element key, otherwise `false`. 
+
+|Parameter||
+|--|--|
+|var|Variant instance.|
+|key|Key name.|
+
+### mgos_zvar_dic_get()
+```c
+mgos_zvar_t *mgos_zvar_dic_get(mgos_zvar_t *var, const char *key);
+```
+Returns the variant element. 
+
+|Parameter||
+|--|--|
+|var|Variant instance.|
+|key|Key name.|
 ### mgos_zvar_dic_bigint_get()
 ```c
 long mgos_zvar_dic_bigint_get(mgos_zvar_t *var, const char *key);
@@ -542,6 +563,16 @@ Removes all dictionary elements.
 ZenVar.dictionary(v, key).remove();
 ```
 Removes the element from the dictionary. 
+
+|Parameter|Type||
+|--|--|--|
+|v|object|Variant instance pointer (mgos_zvar_ *)|
+|key|string|Element key name.|
+### .dictionary().exists()
+```js
+let exists = ZenVar.dictionary(v, key).exists();
+```
+Returns `true` if the dictionary contains the element key, otherwise `false`.
 
 |Parameter|Type||
 |--|--|--|
