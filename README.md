@@ -1,636 +1,183 @@
 # ZenVar
 ## Overview
-Mongoose OS library implementing ZenVar variant object. A ZenVar is like a javascript `var`. It has not a strong data-type, but it can be any of the following:
-* Boolean (`bool` C type)
-* Integer (`long` C type)
-* Decimal (`double` C type)
-* String
-* Dictionary (key/value pairs of any type)
+Mongoose OS library implementing variant variables (like `var` statement in javascript). Using this library you can create variables which haven't data type declared explicitly, but any one of the followings:   
+* Boolean (`bool`)
+* Integer (`long`)
+* Decimal (`double`)
+* String (`char *`)
+* Dictionary (key/value pair dictionary) - It requires msog_zvar_dic libray.
 
-**How to initialize a ZenVar** - Initializing a ZenVar is very easy, thanks to the following special MACROs.
 ```c
-// Initialize as NaV (Not a Value)
-mgos_zvar_t var = MGOS_ZVAR_NAV;
-printf("Is NaV: %s", (mgos_zvar_is_nav(&var) ? "YES" : "NO"));
+// `NULL` variable initialization (like void* var = `NULL`)
+mgos_zvar_t var = mgos_zvar_new();
 
-// Integer
-mgos_zvar_t var = MGOS_ZVAR_BIGINT;           // set to default 0(zero)
-mgos_zvar_t var = MGOS_ZVAR_BIGINT_SET(22);
-printf("Integer value: %ld", mgos_zvar_bigint_get(&var));
+// Integer variable initialization (like long var = 101;)
+mgos_zvar_t var = mgos_zvar_new_integer(101);
 
-// Boolean
-mgos_zvar_t var = MGOS_ZVAR_BOOL;             // set to default false
-mgos_zvar_t var = MGOS_ZVAR_BOOL_SET(true);
-printf("Boolean value: %s", (mgos_zvar_bool_get(&var) == true ? "true" : "false"));
+// Boolean variable initialization (like bool var = true;)
+mgos_zvar_t var = mgos_zvar_new_bool(true);
 
-// Decimal
-mgos_zvar_t var = MGOS_ZVAR_DECIMAL;          // set to default 0.0
-mgos_zvar_t var = MGOS_ZVAR_DECIMAL_SET(9.2);
-printf("Decimal value: %f", mgos_zvar_decimal_get(&var));
+// Decimal variable initialization (like double var = 101.99;)
+mgos_zvar_t var = mgos_zvar_new_decimal(101.99);
 
-// String
-mgos_zvar_t var = MGOS_ZVAR_STR;              // set to default NULL
-mgos_zvar_t var = MGOS_ZVAR_STR_SET("Mike");
-printf("String value: '%s'", mgos_zvar_str_get(&var));
-
-// Empty dictionary
-mgos_zvar_t var = MGOS_ZVAR_DIC;
-printf("Is dictionary: %s", (mgos_zvar_is_dic(&var) ? "YES" : "NO"));
-```
-**How to allocate a ZenVar** - Allocating a ZenVar is very easy, thanks to the following special MACROs.
-```c
-// NaV (Not a Value) pointer
-MGOS_ZVAR_NAV_NEW(var);
-printf("Is NaV: %s", (mgos_zvar_is_nav(var) ? "YES" : "NO"));
-
-// Integer pointer
-MGOS_ZVAR_BIGINT_NEW(var, v);
-printf("Integer value: %ld", mgos_zvar_bigint_get(var));
-
-// Boolean pointer
-MGOS_ZVAR_BOOL_NEW(var, 22);
-printf("Boolean value: %s", (mgos_zvar_bool_get(var) == true ? "true" : "false"));
-
-// Decimal pointer
-MGOS_ZVAR_DECIMAL_NEW(var, 9.2);
-printf("Decimal value: %f", mgos_zvar_decimal_get(var));
-
-// String pointer
-MGOS_ZVAR_STR_NEW(var, "Mike");
-printf("String value: '%s'", mgos_zvar_str_get(var));
-
-// Empty dictionary pointer
-MGOS_ZVAR_DIC_NEW(v);
-printf("Is dictionary: %s", (mgos_zvar_is_dic(var) ? "YES" : "NO"));
+// String variable initialization (like char *var = "Lorem Ipsum";)
+mgos_zvar_t var = mgos_zvar_new_str("Lorem Ipsum");
 ```
 ## C/C++ API Reference
 ### enum mgos_zvar_type
 ```c
 enum mgos_zvar_type {
+  MGOS_ZVAR_TYPE_NULL,
   MGOS_ZVAR_TYPE_BOOL,
-  MGOS_ZVAR_TYPE_BIGINT,
+  MGOS_ZVAR_TYPE_INTEGER,
   MGOS_ZVAR_TYPE_DECIMAL,
   MGOS_ZVAR_TYPE_STR
 };
 ```
 ZenVar variant data-types.
-### mgos_zvar_type()
+### mgos_zvar_get_type()
 ```c
-enum mgos_zvar_type mgos_zvar_type(mgos_zvar_t *var);
+enum mgos_zvar_type mgos_zvar_get_type(mgos_zvarc_t var);
 ```
-Returns the variant [data-type](https://github.com/zendiy-mgos/zvar#enum-mgos_zvar_type).
+Returns the variable [data-type](https://github.com/zendiy-mgos/zvar#enum-mgos_zvar_get_type).
 
 |Parameter||
 |--|--|
-|var|Variant instance.|
-### mgos_zvar_equals()
+|var|Variant variable|
+### mgos_zvar_new()
 ```c
-bool mgos_zvar_equals(mgos_zvar_t *var1, mgos_zvar_t *var2);
+mgos_zvar_t mgos_zvar_new();
 ```
-Compares two variants. Returns `true` if they are equal, otherwise `false`. In case of dictionaries, it compares dictionary elements.
+Creates a variable and initializes it to `NULL`, with no data-type defined. Returns `NULL` in case of error. 
+### mgos_zvar_new_integer(), mgos_zvar_new_bool(), mgos_zvar_new_decimal() and mgos_zvar_new_str()
+```c       
+mgos_zvar_t mgos_zvar_new_integer(long value);
+mgos_zvar_t mgos_zvar_new_bool(bool value);
+mgos_zvar_t mgos_zvar_new_decimal(double value);
+mgos_zvar_t mgos_zvar_new_str(const char *value);
+```
+Creates and initializes a variable. Returns `NULL` in case of error. Invoking `mgos_zvar_new_str(NULL)` is equivalent to `mgos_zvar_new()`.
 
 |Parameter||
 |--|--|
-|var1|Variant instance.|
-|var2|Variant instance.|
+|value|Value to be set.|
+### mgos_zvar_set_null()
+```c 
+void mgos_zvar_set_null(mgos_zvar_t var);
+```
+Sets the variable value to `NULL`.
+
+|Parameter||
+|--|--|
+|var|Variant variable.|
+### mgos_zvar_set_integer(), mgos_zvar_set_bool(), mgos_zvar_set_decimal() and mgos_zvar_set_str()
+```c                                 
+void mgos_zvar_set_integer(mgos_zvar_t var, long value);
+void mgos_zvar_set_bool(mgos_zvar_t var, bool value);
+void mgos_zvar_set_decimal(mgos_zvar_t var, double value);
+void mgos_zvar_set_str(mgos_zvar_t var, const char *value);
+```
+Sets the variable value. Invoking `mgos_zvar_set_str(var, NULL)` is equivalent to `mgos_zvar_set_null(var)`.
+
+|Parameter||
+|--|--|
+|var|Variant variable.|
+|value|Value to be set.|
+### mgos_zvar_set_nstr()
+```c 
+void mgos_zvar_set_nstr(mgos_zvar_t var, const char *value, size_t value_len);
+```
+Sets the variable value. This is a specialized version of `mgos_zvar_set_str` Invoking `mgos_zvar_set_nstr(var, NULL, <any_value>)` is equivalent to `mgos_zvar_set_null(var)`.
+
+|Parameter||
+|--|--|
+|var|Variant variable.|
+|value|String value to set.|
+|value_len|Maximum number of characters to be set. Ignored if the passed `value` parameter is `NULL`.|
+### mgos_zvar_get_integer(), mgos_zvar_get_bool(), mgos_zvar_get_decimal() and mgos_zvar_get_str()
+```c 
+long mgos_zvar_get_integer(mgos_zvarc_t var);
+bool mgos_zvar_get_bool(mgos_zvarc_t var);
+double mgos_zvar_get_decimal(mgos_zvarc_t var);
+const char *mgos_zvar_get_str(mgos_zvarc_t var);
+```
+Returns the variable value.
+
+|Parameter||
+|--|--|
+|var|Variant variable.|
+
+**Remarks**
+
+The returned value depends on the input variable data-type. Please refer to details below.
+|Function / Input|INTEGER|BOOL|DECIMAL|STRING|Any other|
+|--|--|--|--|--|--|
+|mgos_zvar_get_integer|Returns the integer value|Returns `0` if input value is `false`|Returns the integer part of the decimal|Returns `0`|Returns `0`|
+|mgos_zvar_get_bool|Returns `false` if input value is `0`|Returns the boolean value|Returns `false` if input value is `0.0`|Returns `false` if input string is empty|Returns `false`|
+|mgos_zvar_get_decimal|Returns the input value as decimal|Returns `0.0`|Returns the decimal value|Returns `0.0`|Returns `0.0`|
+|mgos_zvar_get_str|Returns `NULL`|Returns `NULL`|Returns `NULL`|Returns the string value|Returns `NULL`|
+### mgos_zvar_is_equal()
+```c
+bool mgos_zvar_is_equal(mgos_zvarc_t var1, mgos_zvarc_t var2);
+```
+Compares two variables. Returns `true` if they are equal, otherwise `false`.
+
+|Parameter||
+|--|--|
+|var1|Variant variable.|
+|var2|Variant variable.| 
+### mgos_zvar_is_null()
+```c
+bool mgos_zvar_is_null(mgos_zvarc_t var);
+```
+Returns `true` if the variable value is `NULL`, otherwise `false`.
+
+|Parameter||
+|--|--|
+|var|Variant variable.|
 ### mgos_zvar_copy()
 ```c
-mgos_zvar_t *mgos_zvar_copy(mgos_zvar_t *src, mgos_zvar_t *dest);
+bool mgos_zvar_copy(mgos_zvarc_t src_var, mgos_zvar_t dest_var); 
 ```
-Copies the source variant into the destination one. In case of dictionaries, dictionary elements are copied.
+Copies the source variable into the destination one. Returns `true` if copied successfully, otherwise `false`.
 
 |Parameter||
 |--|--|
-|src|Source variant instance.|
-|dest|Destination variant instance.|
-### mgos_zvar_nav_set()
+|src|Source variant variable.|
+|dest|Destination variant variable.|
+### mgos_zvar_length()
 ```c
-mgos_zvar_t *mgos_zvar_nav_set(mgos_zvar_t *var);
+int mgos_zvar_length(mgos_zvarc_t var); 
 ```
-Sets variant value to NaV (Not a Value).
+Returns the number of items in a dictionary the string length. Returns `0` in all other cases.
 
 |Parameter||
 |--|--|
-|var|Variant instance.|
-### mgos_zvar_is_nav()
+|var|Variant variable.|
+### mgos_zvar_set_unchanged()
 ```c
-bool mgos_zvar_is_nav(mgos_zvar_t *var);
+void mgos_zvar_set_unchanged(mgos_zvar_t var);
 ```
-Returns `true` if the variant value is NaV (Not a Value), otherwise `false`.
+Marks the variable as unchanged. This function could be used in compination with `mgos_zvar_is_changed`.
 
 |Parameter||
 |--|--|
-|var|Variant instance.|
-### mgos_zvar_bigint_set()
+|var|Variant variable.|
+### mgos_zvar_is_changed()
 ```c
-mgos_zvar_t *mgos_zvar_bigint_set(mgos_zvar_t *var, long value);
+bool mgos_zvar_is_changed(mgos_zvarc_t var);
 ```
-Sets the integer value.
+Returns `true` if the variable value is changed since its creation or since the last call of `mgos_zvar_set_unchanged`, otherwise `false`.
 
 |Parameter||
 |--|--|
-|var|Variant instance.|
-|value|Value to set.|
-### mgos_zvar_bool_set()
-```c
-mgos_zvar_t *mgos_zvar_bool_set(mgos_zvar_t *var, bool value);
-```
-Sets the boolean value.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-|value|Value to set.|
-### mgos_zvar_decimal_set()
-```c
-mgos_zvar_t *mgos_zvar_decimal_set(mgos_zvar_t *var, double value);
-```
-Sets the boolean value.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-|value|Value to set.|
-### mgos_zvar_str_set()
-```c
-mgos_zvar_t *mgos_zvar_str_set(mgos_zvar_t *var, const char *str);
-```
-Sets the string value.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-|str|String to set.|
-### mgos_zvar_bigint_get()
-```c
-long mgos_zvar_bigint_get(mgos_zvar_t *var);
-```
-Gets the integer value.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-### mgos_zvar_bool_get()
-```c
-bool mgos_zvar_bool_get(mgos_zvar_t *var);
-```
-Gets the boolean value.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-### mgos_zvar_decimal_get()
-```c
-double mgos_zvar_decimal_get(mgos_zvar_t *var);
-```
-Gets the decimal value.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-### mgos_zvar_str_get()
-```c
-const char *mgos_zvar_str_get(mgos_zvar_t *var);
-```
-Gets the string value.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-### json_printf_zvar()
-```c
-int json_printf_zvar(struct json_out *out, va_list *ap);
-```
-Helper %M callback that prints the variant. Consumes a mgos_zvar_t *. Returns number of printed bytes. This helper can be used in `json_printf`, `json_fprintf` or `json_asprintf` functions (see Mongoose OS [JSON library](https://mongoose-os.com/docs/mongoose-os/api/core/frozen.h.md) for more details).
-```c
-// Example #1: print a decimal variant
-mgos_zvar_t var = MGOS_ZVAR_DECIMAL_SET(51.2);
-char *buf = json_asprintf("{humidity: %M}", json_printf_zvar, &var);
-printf("%s", buf); // '{"humidity": 51.2}'
-free(buf):
-
-// Example #2: print a dictionary
-mgos_zvar_t var = MGOS_ZVAR_DIC;
-mgos_zvar_dic_decimal_set(&var, "humidity", 51.2);
-mgos_zvar_dic_bool_set(&var, "rain", true);
-mgos_zvar_dic_str_set(&var, "weather", "rainy");
-char *buf = json_asprintf("{state: %M}", json_printf_zvar, &var);
-printf("%s", buf); // '{"state": {"humidity": 51.2, "rain": true, "weather": "rainy"}}'
-free(buf):
-```
+|var|Variant variable.|
 ### mgos_zvar_free()
 ```c
-void mgos_zvar_free(mgos_zvar_t *var);
+void mgos_zvar_free(mgos_zvar_t var);
 ```
-Closes and disposes variant instance.
+Deallocates the variable. If the variable is an element of a dictionary, it is also removed from the collection. If the variable is a dictionary, all its items are deallocated as well.
 
 |Parameter||
 |--|--|
-|var|Variant instance.|
-### mgos_zvar_is_dic()
-```c
-bool mgos_zvar_is_dic(mgos_zvar_t *var);
-```
-Returns `true` if the variant is a dictionary, otherwise `false`.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-### mgos_zvar_dic_clear()
-```c
-void mgos_zvar_dic_clear(mgos_zvar_t *var);
-```
-Removes all dictionary elements.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-### mgos_zvar_dic_count()
-```c
-int mgos_zvar_dic_count(mgos_zvar_t *var);
-```
-Returns the number of elements in the dictionary.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-### mgos_zvar_dic_remove()
-```c
-void mgos_zvar_dic_remove(mgos_zvar_t *var, const char *key);
-```
-Removes the element from the dictionary.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-|key|Key name.|
-### mgos_zvar_dic_contains()
-```c
-bool mgos_zvar_dic_contains(mgos_zvar_t *var, const char *key);
-```
-Returns `true` if the dictionary contains the element key, otherwise `false`. 
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-|key|Key name.|
-
-### mgos_zvar_dic_get()
-```c
-mgos_zvar_t *mgos_zvar_dic_get(mgos_zvar_t *var, const char *key);
-```
-Returns the variant element. 
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-|key|Key name.|
-### mgos_zvar_dic_bigint_get()
-```c
-long mgos_zvar_dic_bigint_get(mgos_zvar_t *var, const char *key);
-```
-Gets the integer value of the dictionary element.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-|key|Key name.|
-### mgos_zvar_dic_bool_get()
-```c
-bool mgos_zvar_dic_bool_get(mgos_zvar_t *var, const char *key);
-```
-Gets the boolean value of the dictionary element.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-|key|Key name.|
-### mgos_zvar_dic_decimal_get()
-```c
-double mgos_zvar_dic_decimal_get(mgos_zvar_t *var, const char *key);
-```
-Gets the decimal value of the dictionary element.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-|key|Key name.|
-### mgos_zvar_dic_str_get()
-```c
-const char *mgos_zvar_dic_str_get(mgos_zvar_t *var, const char *key);
-```
-Gets the string value of the dictionary element.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-|key|Key name.|
-### mgos_zvar_dic_bigint_set()
-```c
-mgos_zvar_t *mgos_zvar_dic_bigint_set(mgos_zvar_t *var, const char *key, long val);
-```
-Sets the integer value of the dictionary element.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-|key|Key name.|
-|val|Value to set.|
-### mgos_zvar_dic_bool_set()
-```c
-mgos_zvar_t *mgos_zvar_dic_bool_set(mgos_zvar_t *var, const char *key, bool val);
-```
-Sets the boolean value of the dictionary element.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-|key|Key name.|
-|val|Value to set.|
-### mgos_zvar_t *mgos_zvar_dic_decimal_set()
-```c
-mgos_zvar_t *mgos_zvar_dic_decimal_set(mgos_zvar_t *var, const char *key, double val);
-```
-Sets the decimal value of the dictionary element.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-|key|Key name.|
-|val|Value to set.|
-### mgos_zvar_dic_str_set()
-```c
-mgos_zvar_t *mgos_zvar_dic_str_set(mgos_zvar_t *var, const char *key, const char *str);
-```
-Sets the string value of the dictionary element.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-|key|Key name.|
-|str|String to set.|
-### mgos_zvar_dic_get_at()
-```c
-mgos_zvar_t *mgos_zvar_dic_get_at(mgos_zvar_t *var, int idx, const char **key);
-```
-Gets the variant instance of the dictionary element at specified zero-based index. If the `key` parameter is not `NULL`, the element key name is returned. 
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-|idx|Item index (zero-based).|
-|key|Key name of returned element (optional).|
-### mgos_zvar_dic_bigint_get_at()
-```c
-long mgos_zvar_dic_bigint_get_at(mgos_zvar_t *var, int idx, const char **key);
-```
-Gets the integer value of the dictionary element at specified zero-based index. If the `key` parameter is not `NULL`, the element key name is returned.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-|idx|Item index (zero-based).|
-|key|Key name of returned element (optional).|
-### mgos_zvar_dic_bool_get_at()
-```c
-bool mgos_zvar_dic_bool_get_at(mgos_zvar_t *var, int idx, const char **key);
-```
-Gets the boolean value of the dictionary element at specified zero-based index. If the `key` parameter is not `NULL`, the element key name is returned.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-|idx|Item index (zero-based).|
-|key|Key name of returned element (optional).|
-### mgos_zvar_dic_decimal_get_at()
-```c
-double mgos_zvar_dic_decimal_get_at(mgos_zvar_t *var, int idx, const char **key);
-```
-Gets the decimal value of the dictionary element at specified zero-based index. If the `key` parameter is not `NULL`, the element key name is returned.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-|idx|Item index (zero-based).|
-|key|Key name of returned element (optional).|
-### mgos_zvar_dic_str_get_at()
-```c
-const char *mgos_zvar_dic_str_get_at(mgos_zvar_t *var, int idx, const char **key);
-```
-Gets the string value of the dictionary element at specified zero-based index. If the `key` parameter is not `NULL`, the element key name is returned.
-
-|Parameter||
-|--|--|
-|var|Variant instance.|
-|idx|Item index (zero-based).|
-|key|Key name of returned element (optional).|
-## JS API Reference
-### Data-types
-```js
-ZenVar.TYPE.BOOL
-ZenVar.TYPE.BIGINT
-ZenVar.TYPE.DECIMAL
-ZenVar.TYPE.STR
-```
-### .typeOf()
-```js
-let type = ZenVar.typeOf(v);
-```
-Returns the variant [data-type](https://github.com/zendiy-mgos/zvar#data-types).
-
-|Parameter|Type||
-|--|--|--|
-|v|object|Variant instance pointer (mgos_zvar_ *)|
-### .isNaV(c)
-```js
-let isNav = ZenVar.isNaV(v);
-```
-Returns `true` if the variant value is NaV (Not a Value), otherwise `false`.
-
-|Parameter|Type||
-|--|--|--|
-|v|object|Variant instance pointer (mgos_zvar_ *)|
-### .NaV()
-```js
-ZenVar.NaV(v);
-```
-Sets variant value to NaV (Not a Value).
-
-|Parameter|Type||
-|--|--|--|
-|src|object|Variant instance pointer (mgos_zvar_ *)|
-### .isDictionary()
-```js
-let isDic = ZenVar.isDictionary(v);
-```
-Returns `true` if the variant is a dictionary, otherwise `false`.
-
-|Parameter|Type||
-|--|--|--|
-|v|object|Variant instance pointer (mgos_zvar_ *)|
-### .equals()
-```js
-let eq = ZenVar.equals(v1, v2);
-```
-Compares two variants. Returns `true` if they are equal, otherwise `false`. In case of dictionaries, it compares dictionary elements.
-
-|Parameter|Type||
-|--|--|--|
-|v1|object|Variant instance pointer (mgos_zvar_ *)|
-|v2|object|Variant instance pointer (mgos_zvar_ *)|
-### .copy()
-```js
-ZenVar.copy(src, dest);
-```
-Copies the source variant into the destination one. In case of dictionaries, dictionary elements are copied.
-
-|Parameter|Type||
-|--|--|--|
-|src|object|Source variant instance pointer (mgos_zvar_ *)|
-|dest|object|Destination variant instance pointer (mgos_zvar_ *)|
-### .bool()
-```js
-// get the value
-let out = ZenVar.bool(v);
-// set the value
-ZenVar.bool(v, val);
-```
-Gest or sets the boolean value.
-
-|Parameter|Type||
-|--|--|--|
-|v|object|Variant instance pointer (mgos_zvar_ *).|
-|val|boolean|Value to set.|
-### .int()
-```js
-// get the value
-let out = ZenVar.int(v);
-// set the value
-ZenVar.int(v, val);
-```
-Gest or sets the integer value.
-
-|Parameter|Type||
-|--|--|--|
-|v|object|Variant instance pointer (mgos_zvar_ *).|
-|val|integer|Value to set.|
-### .decimal()
-```js
-// get the value
-let out = ZenVar.decimal(v);
-// set the value
-ZenVar.decimal(v, val);
-```
-Gest or sets the decimal value.
-
-|Parameter|Type||
-|--|--|--|
-|v|object|Variant instance pointer (mgos_zvar_ *).|
-|val|decimal|Value to set.|
-### .string()
-```js
-// get the value
-let out = ZenVar.string(v);
-// set the value
-ZenVar.string(v, val);
-```
-Gest or sets the string value.
-
-|Parameter|Type||
-|--|--|--|
-|v|object|Variant instance pointer (mgos_zvar_ *).|
-|val|string|Value to set.|
-### .dictionary().count()
-```js
-let count = ZenVar.dictionary(v).count();
-```
-Returns the number of elements in the dictionary.
-
-|Parameter|Type||
-|--|--|--|
-|v|object|Variant instance pointer (mgos_zvar_ *)|
-### .dictionary().clear()
-```js
-ZenVar.dictionary(v).clear();
-```
-Removes all dictionary elements.
-
-|Parameter|Type||
-|--|--|--|
-|v|object|Variant instance pointer (mgos_zvar_ *)|
-### .dictionary().remove()
-```js
-ZenVar.dictionary(v, key).remove();
-```
-Removes the element from the dictionary. 
-
-|Parameter|Type||
-|--|--|--|
-|v|object|Variant instance pointer (mgos_zvar_ *)|
-|key|string|Element key name.|
-### .dictionary().exists()
-```js
-let exists = ZenVar.dictionary(v, key).exists();
-```
-Returns `true` if the dictionary contains the element key, otherwise `false`.
-
-|Parameter|Type||
-|--|--|--|
-|v|object|Variant instance pointer (mgos_zvar_ *)|
-|key|string|Element key name.|
-### .dictionary().bool()
-```js
-// get the value
-let out = ZenVar.dictionary(v, key).bool();
-// set the value
-ZenVar.dictionary(v, key).bool(val)
-```
-Sets or gets the boolean value of the dictionary element.
-
-|Parameter|Type||
-|--|--|--|
-|v|object|Variant instance pointer (mgos_zvar_ *)|
-|key|string|Element key name.|
-|val|boolean|Value to set.|
-### .dictionary().int()
-```js
-// get the value
-let out = ZenVar.dictionary(v, key).int();
-// set the value
-ZenVar.dictionary(v, key).int(val)
-```
-Sets or gets the integer value of the dictionary element.
-
-|Parameter|Type||
-|--|--|--|
-|v|object|Variant instance pointer (mgos_zvar_ *)|
-|key|string|Element key name.|
-|val|integer|Value to set.|
-### .dictionary().decimal()
-```js
-// get the value
-let out = ZenVar.dictionary(v, key).decimal();
-// set the value
-ZenVar.dictionary(v, key).decimal(val)
-```
-Sets or gets the decimal value of the dictionary element.
-
-|Parameter|Type||
-|--|--|--|
-|v|object|Variant instance pointer (mgos_zvar_ *)|
-|key|string|Element key name.|
-|val|decimal|Value to set.|
-### .dictionary().string()
-```js
-// get the value
-let out = ZenVar.dictionary(v, key).string();
-// set the value
-ZenVar.dictionary(v, key).string(val)
-```
-Sets or gets the string value of the dictionary element.
-
-|Parameter|Type||
-|--|--|--|
-|v|object|Variant instance pointer (mgos_zvar_ *)|
-|key|string|Element key name.|
-|val|string|Value to set.|
+|var|Variant variable.|

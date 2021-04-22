@@ -18,10 +18,14 @@
 #ifndef MGOS_ZVAR_H_
 #define MGOS_ZVAR_H_
 
+/* Uncomment lines below for running unit tests
+ * (run unit-tests.c)
+ */
+//#define MGOS_ZVAR_HAVE_DIC 1
+//#define MGOS_ZVAR_HAVE_JSON 1
+
 #include <stdlib.h>
 #include <stdbool.h>
-#include <string.h>
-#include "frozen.h"
 
 #ifdef MGOS_HAVE_MJS
 #include "mjs.h"
@@ -32,102 +36,47 @@ extern "C" {
 #endif
 
 enum mgos_zvar_type {
-  MGOS_ZVAR_TYPE_UNK = 0,     //00000
-  MGOS_ZVAR_TYPE_DIC = 1,     //00001
-  MGOS_ZVAR_TYPE_BOOL = 2,    //00010
-  MGOS_ZVAR_TYPE_BIGINT = 4,  //00100
-  MGOS_ZVAR_TYPE_DECIMAL = 8, //01000
-  MGOS_ZVAR_TYPE_STR = 16     //10000
+  MGOS_ZVAR_TYPE_NULL = 0,
+  MGOS_ZVAR_TYPE_BOOL = 2,
+  MGOS_ZVAR_TYPE_INTEGER = 3,
+  MGOS_ZVAR_TYPE_DECIMAL = 4,
+  MGOS_ZVAR_TYPE_STR = 5
 };
 
-union mgos_zvar_value {
-   long l;
-   double d;
-   bool b;
-   char *s;
-};
+struct mgos_zvariant;
+typedef struct mgos_zvariant *mgos_zvar_t;
+typedef const struct mgos_zvariant *mgos_zvarc_t;
 
-#define MG_ZVAR_INIT(t,v,uf,sz) { .type=t, .value.uf=v, .k=NULL, .v_size=sz }
+mgos_zvar_t mgos_zvar_new();            
+mgos_zvar_t mgos_zvar_new_integer(long value);
+mgos_zvar_t mgos_zvar_new_bool(bool value);
+mgos_zvar_t mgos_zvar_new_decimal(double value);
+mgos_zvar_t mgos_zvar_new_str(const char *value);
 
-#define MGOS_ZVAR_NAV               MG_ZVAR_INIT(MGOS_ZVAR_TYPE_UNK, 0, d, 0)
-#define MGOS_ZVAR_DIC               MG_ZVAR_INIT(MGOS_ZVAR_TYPE_DIC, 0, d, 0)
+void mgos_zvar_set_null(mgos_zvar_t var);                                 
+void mgos_zvar_set_integer(mgos_zvar_t var, long value);
+void mgos_zvar_set_bool(mgos_zvar_t var, bool value);
+void mgos_zvar_set_decimal(mgos_zvar_t var, double value);
+void mgos_zvar_set_str(mgos_zvar_t var, const char *value);
+void mgos_zvar_set_nstr(mgos_zvar_t var, const char *value, size_t value_len);
 
-#define MGOS_ZVAR_BIGINT_SET(v)     MG_ZVAR_INIT(MGOS_ZVAR_TYPE_BIGINT, v, l, sizeof(long))
-#define MGOS_ZVAR_BOOL_SET(v)       MG_ZVAR_INIT(MGOS_ZVAR_TYPE_BOOL, v, b, sizeof(bool))
-#define MGOS_ZVAR_DECIMAL_SET(v)    MG_ZVAR_INIT(MGOS_ZVAR_TYPE_DECIMAL, v, d, sizeof(bool))
-#define MGOS_ZVAR_STR_SET(v)        MG_ZVAR_INIT(MGOS_ZVAR_TYPE_STR, (v ? strdup(v) : 0), s, (v ? (strlen(v)+1) : 0))
+long mgos_zvar_get_integer(mgos_zvarc_t var);
+bool mgos_zvar_get_bool(mgos_zvarc_t var);
+double mgos_zvar_get_decimal(mgos_zvarc_t var);
+const char *mgos_zvar_get_str(mgos_zvarc_t var);
 
-#define MGOS_ZVAR_BIGINT            MGOS_ZVAR_BIGINT_SET(0)
-#define MGOS_ZVAR_BOOL              MGOS_ZVAR_BOOL_SET(false)
-#define MGOS_ZVAR_DECIMAL           MGOS_ZVAR_DECIMAL_SET(0.0)
-#define MGOS_ZVAR_STR               MGOS_ZVAR_STR_SET(NULL)
+enum mgos_zvar_type mgos_zvar_get_type(mgos_zvarc_t var);
+bool mgos_zvar_copy(mgos_zvarc_t src_var, mgos_zvar_t dest_var);  
+bool mgos_zvar_is_null(mgos_zvarc_t var);
 
-#define MG_ZVAR_NEW(n, t, v, uf,sz)    mgos_zvar_t *n = calloc(1, sizeof(void *)); n->type = t; n->value.uf = v; n->v_size=sz;
+bool mgos_zvar_is_equal(mgos_zvarc_t var1, mgos_zvarc_t var2);
 
-#define MGOS_ZVAR_NAV_NEW(n)        MG_ZVAR_NEW(n, MGOS_ZVAR_TYPE_UNK, 0, d, 0)
-#define MGOS_ZVAR_DIC_NEW(n)        MG_ZVAR_NEW(n, MGOS_ZVAR_TYPE_DIC, 0, d, 0)
-#define MGOS_ZVAR_BIGINT_NEW(n, v)   MG_ZVAR_NEW(n, MGOS_ZVAR_TYPE_BIGINT, v, l, sizeof(long))
-#define MGOS_ZVAR_BOOL_NEW(n, v)     MG_ZVAR_NEW(n, MGOS_ZVAR_TYPE_BOOL, v, b, sizeof(bool))
-#define MGOS_ZVAR_DECIMAL_NEW(n, v)  MG_ZVAR_NEW(n, MGOS_ZVAR_TYPE_DECIMAL, v, sizeof(double))
-#define MGOS_ZVAR_STR_NEW(n, v)      MG_ZVAR_NEW(n, MGOS_ZVAR_TYPE_STR, (v ? strdup(v) : NULL), (v ? (strlen(v)+1) : NULL))
+int mgos_zvar_length(mgos_zvarc_t var);
 
+void mgos_zvar_set_unchanged(mgos_zvar_t var);
+bool mgos_zvar_is_changed(mgos_zvarc_t var);
 
-typedef struct mgos_zvariant {
-  enum mgos_zvar_type type; 
-  union mgos_zvar_value value;
-  size_t v_size;
-  void *k;
-} mgos_zvar_t;
-
-enum mgos_zvar_type mgos_zvar_type(mgos_zvar_t *v);
-
-bool mgos_zvar_equals(mgos_zvar_t *v1, mgos_zvar_t *v2);
-
-mgos_zvar_t *mgos_zvar_copy(mgos_zvar_t *src, mgos_zvar_t *dest);
-    
-mgos_zvar_t *mgos_zvar_nav_set(mgos_zvar_t *v);
-bool mgos_zvar_is_nav(mgos_zvar_t *v);
-                                 
-mgos_zvar_t *mgos_zvar_bigint_set(mgos_zvar_t *v, long value);
-mgos_zvar_t *mgos_zvar_bool_set(mgos_zvar_t *v, bool value);
-mgos_zvar_t *mgos_zvar_decimal_set(mgos_zvar_t *v, double value);
-mgos_zvar_t *mgos_zvar_str_set(mgos_zvar_t *v, const char *str);
-
-long mgos_zvar_bigint_get(mgos_zvar_t *v);
-bool mgos_zvar_bool_get(mgos_zvar_t *v);
-double mgos_zvar_decimal_get(mgos_zvar_t *v);
-const char *mgos_zvar_str_get(mgos_zvar_t *v);
-
-int json_printf_zvar(struct json_out *out, va_list *ap);
-
-void mgos_zvar_free(mgos_zvar_t *v);
-
-
-/* Dictionary functions */
-
-bool mgos_zvar_is_dic(mgos_zvar_t *v);
-void mgos_zvar_dic_clear(mgos_zvar_t *v);
-int mgos_zvar_dic_count(mgos_zvar_t *v);
-void mgos_zvar_dic_remove(mgos_zvar_t *v, const char *key);
-
-mgos_zvar_t *mgos_zvar_dic_get(mgos_zvar_t *v, const char *key);
-bool mgos_zvar_dic_contains(mgos_zvar_t *v, const char *key);
-
-long mgos_zvar_dic_bigint_get(mgos_zvar_t *v, const char *key);
-bool mgos_zvar_dic_bool_get(mgos_zvar_t *v, const char *key);
-double mgos_zvar_dic_decimal_get(mgos_zvar_t *v, const char *key);
-const char *mgos_zvar_dic_str_get(mgos_zvar_t *v, const char *key);
-
-mgos_zvar_t *mgos_zvar_dic_bigint_set(mgos_zvar_t *v, const char *key, long val);
-mgos_zvar_t *mgos_zvar_dic_bool_set(mgos_zvar_t *v, const char *key, bool val);
-mgos_zvar_t *mgos_zvar_dic_decimal_set(mgos_zvar_t *v, const char *key, double val);
-mgos_zvar_t *mgos_zvar_dic_str_set(mgos_zvar_t *v, const char *key, const char *val);
-
-mgos_zvar_t *mgos_zvar_dic_get_at(mgos_zvar_t *v, int idx, const char **key);
-long mgos_zvar_dic_bigint_get_at(mgos_zvar_t *v, int idx, const char **key);
-bool mgos_zvar_dic_bool_get_at(mgos_zvar_t *v, int idx, const char **key);
-double mgos_zvar_dic_decimal_get_at(mgos_zvar_t *v, int idx, const char **key);
-const char *mgos_zvar_dic_str_get_at(mgos_zvar_t *v, int idx, const char **key);
+void mgos_zvar_free(mgos_zvar_t var);
 
 #ifdef __cplusplus
 }
