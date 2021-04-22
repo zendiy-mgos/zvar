@@ -1,13 +1,17 @@
 # ZenVar
 ## Overview
-Mongoose OS library implementing variant variables (like `var` statement in javascript). Using this library you can create variables which haven't data type declared explicitly, but any one of the followings:   
+Mongoose OS library implementing variant variables (like `var` statement in javascript). Using this library you can create variables which haven't data type declared explicitly, but any one of the followings.
+
+**SUPPORTED DATA-TYPES**
 * Boolean (`bool`)
 * Integer (`long`)
 * Decimal (`double`)
 * String (`char *`)
 * Dictionary (key/value pair dictionary) - This requires you to include the [msog_zvar_dic libray](https://github.com/zendiy-mgos/zvar-dic) in your porject.
 
-**TIP:** ZenVar variables support JSON serialization/deserialization as well. Just include the [msog_zvar_json libray](https://github.com/zendiy-mgos/zvar-json) in your porject.
+**JSON SUPPORT**
+
+ZenVar variables support JSON serialization/deserialization as well. Just include the [msog_zvar_json libray](https://github.com/zendiy-mgos/zvar-json) in your porject.
 ## Get Started
 ```c
 // `NULL` variable initialization (like void* var = `NULL`)
@@ -160,7 +164,7 @@ Copies the source variable into the destination one. Returns `true` if copied su
 ```c
 int mgos_zvar_length(mgos_zvarc_t var); 
 ```
-Returns the number of items in a dictionary the string length. Returns `0` in all other cases.
+Returns the number of items in a dictionary or the string length. Returns `0` in all other cases.
 
 |Parameter||
 |--|--|
