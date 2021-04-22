@@ -184,7 +184,7 @@ bool mg_zvar_dic_are_equal(mgos_zvarc_t var1, mgos_zvarc_t var2) {
   while(var) {
     mgos_zvar_t value = mg_zvar_dic_get((mgos_zvar_t)var2, var->key->name, strlen(var->key->name), false);
     if (!value) return false;
-    if (!mgos_zvar_is_equal(value, var)) return false;
+    if (mgos_zvar_cmp(value, var) != 0) return false;
     var = var->key->next_var;
   }
 
@@ -200,7 +200,7 @@ bool mg_zvar_dic_copy(mgos_zvarc_t src, mgos_zvar_t dest, bool del_unmatch) {
   mgos_zvar_t var = src->value.dic_head.var;
   while(var) {
     value = mg_zvar_dic_get(dest, var->key->name, strlen(var->key->name), true);
-    if (!mgos_zvar_is_equal(value, var)) {
+    if (mgos_zvar_cmp(value, var) != 0) {
       mgos_zvar_copy(var, value);
     }
     var = var->key->next_var;
@@ -347,32 +347,48 @@ void mgos_zvar_set_null(mgos_zvar_t var) {
   }
 }
 
-bool mgos_zvar_is_equal(mgos_zvarc_t var1, mgos_zvarc_t var2) {
-  if (var1 != NULL && var2 != NULL) {
-    if (var1 == var2) return true; // comparing the same instance
-    #if MGOS_ZVAR_HAVE_DIC
-    if(mgos_zvar_is_dic(var1) || mgos_zvar_is_dic(var2)) {
-      return mg_zvar_dic_are_equal(var1, var2);
-    }
-    #endif
-
-    if (mgos_zvar_get_type(var1) != mgos_zvar_get_type(var2)) return false;
-    switch(mgos_zvar_get_type(var1)) {
-      case MGOS_ZVAR_TYPE_INTEGER:
-        return (var1->value.l == var2->value.l);
-      case MGOS_ZVAR_TYPE_DECIMAL:
-        return (var1->value.d == var2->value.d);
-      case MGOS_ZVAR_TYPE_BOOL:
-        return (var1->value.b == var2->value.b);
-      case MGOS_ZVAR_TYPE_STR:
-        return (strcmp(var1->value.s, var2->value.s) == 0);
-      case MGOS_ZVAR_TYPE_NULL:
-        return true;
-      default:
-        return false;
-    };
+int mgos_zvar_cmp(mgos_zvarc_t var1, mgos_zvarc_t var2) {
+  if (var1 == NULL && var2 == NULL) return 0; // both NULL
+  if (var1 == NULL && var2 != NULL) return -1; // var1 < var2
+  if (var1 != NULL && var2 == NULL) return 1; // var1 > var2
+  if (var1 == var2) return 0; // comparing the same instance
+  
+   #if MGOS_ZVAR_HAVE_DIC
+  if(mgos_zvar_is_dic(var1) || mgos_zvar_is_dic(var2)) {
+    return (mg_zvar_dic_are_equal(var1, var2) ? 0 : -1);
   }
-  return (var1 == NULL && var2 == NULL);
+  #endif
+
+  enum mgos_zvar_type t1 = mgos_zvar_get_type(var1);
+  enum mgos_zvar_type t2 = mgos_zvar_get_type(var2);
+  
+  if(t1 != t2) {
+    if (t1 != MGOS_ZVAR_TYPE_INTEGER && t1 != MGOS_ZVAR_TYPE_DECIMAL ||
+        t1 != MGOS_ZVAR_TYPE_INTEGER && t1 != MGOS_ZVAR_TYPE_DECIMAL) {
+      return INT_MAX;       
+    }
+  }
+  
+  switch(t1) {
+    case MGOS_ZVAR_TYPE_INTEGER:
+      if (t2 == MGOS_ZVAR_TYPE_INTEGER)
+        return (var1->value.l < var2->value.l ? -1 : (var1->value.l > var2->value.l ? 1 : 0));
+      else
+        return (var1->value.l < var2->value.d ? -1 : (var1->value.l > var2->value.d ? 1 : 0));
+    case MGOS_ZVAR_TYPE_DECIMAL:
+      if (t2 == MGOS_ZVAR_TYPE_DECIMAL)
+        return (var1->value.d < var2->value.d ? -1 : (var1->value.d > var2->value.d ? 1 : 0));
+      else
+        return (var1->value.d < var2->value.l ? -1 : (var1->value.d > var2->value.l ? 1 : 0));
+    case MGOS_ZVAR_TYPE_BOOL:
+      return (var1->value.b < var2->value.b ? -1 : (var1->value.b > var2->value.b ? 1 : 0));
+    case MGOS_ZVAR_TYPE_STR:
+      return strcmp(var1->value.s, var2->value.s);
+    case MGOS_ZVAR_TYPE_NULL:
+      return 0;
+  };
+
+  return INT_MAX; //error
 }
 
 bool mgos_zvar_copy(mgos_zvarc_t src_var, mgos_zvar_t dest_var) {

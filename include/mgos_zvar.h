@@ -26,6 +26,7 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
+#include <limits.h>
 
 #ifdef MGOS_HAVE_MJS
 #include "mjs.h"
@@ -69,7 +70,7 @@ enum mgos_zvar_type mgos_zvar_get_type(mgos_zvarc_t var);
 bool mgos_zvar_copy(mgos_zvarc_t src_var, mgos_zvar_t dest_var);  
 bool mgos_zvar_is_null(mgos_zvarc_t var);
 
-bool mgos_zvar_is_equal(mgos_zvarc_t var1, mgos_zvarc_t var2);
+int mgos_zvar_cmp(mgos_zvarc_t var1, mgos_zvarc_t var2);
 
 int mgos_zvar_length(mgos_zvarc_t var);
 

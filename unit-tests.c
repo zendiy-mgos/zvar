@@ -63,7 +63,7 @@ int main()
   ASSERT(mgos_zvar_is_null(v1));
   ASSERT(!mgos_zvar_is_changed(v1));
   ASSERT(mgos_zvar_is_null(v2));
-  ASSERT(mgos_zvar_is_equal(v1, v2));
+  ASSERT(mgos_zvar_cmp(v1, v2) == 0);
   mgos_zvar_free(v1);
   mgos_zvar_free(v2);
   
@@ -184,49 +184,110 @@ int main()
   ASSERT(mgos_zvar_is_null(v1));
   mgos_zvar_free(v1);
   
+  ASSERT(mgos_zvar_cmp(NULL, NULL) == 0);
+  
+  v1 = mgos_zvar_new_bool(false);
+  v2 = mgos_zvar_new_integer(10);
+  ASSERT(mgos_zvar_cmp(v1, v2) == INT_MAX);
+  mgos_zvar_free(v1);
+  mgos_zvar_free(v2);
+  
+  v1 = mgos_zvar_new_decimal(10.00);
+  v2 = mgos_zvar_new_integer(10);
+  ASSERT(mgos_zvar_cmp(v1, v2) == 0);
+  mgos_zvar_set_decimal(v2, 10.1);
+  ASSERT(mgos_zvar_cmp(v1, v2) < 0);
+  ASSERT(mgos_zvar_cmp(v2, v1) > 0);
+  mgos_zvar_free(v1);
+  mgos_zvar_free(v2);
+  
+  v1 = mgos_zvar_new();
+  v2 = mgos_zvar_new();
+  ASSERT(mgos_zvar_cmp(v1, v2) == 0);
+  ASSERT(mgos_zvar_cmp(v1, NULL) > 0);
+  ASSERT(mgos_zvar_cmp(NULL, v2) < 0);
+  mgos_zvar_free(v1);
+  mgos_zvar_free(v2);
+  
+  v1 = mgos_zvar_new_str("A");
+  v2 = mgos_zvar_new_str("B");
+  ASSERT(mgos_zvar_cmp(v1, v2) < 0);
+  ASSERT(mgos_zvar_cmp(v2, v1) > 0);
+  mgos_zvar_set_str(v2, "A");
+  ASSERT(mgos_zvar_cmp(v1, v2) == 0);
+  mgos_zvar_free(v1);
+  mgos_zvar_free(v2);
+  
+  v1 = mgos_zvar_new_integer(10);
+  v2 = mgos_zvar_new_integer(20);
+  ASSERT(mgos_zvar_cmp(v1, v2) < 0);
+  ASSERT(mgos_zvar_cmp(v2, v1) > 0);
+  mgos_zvar_set_integer(v2, 10);
+  ASSERT(mgos_zvar_cmp(v1, v2) == 0);
+  mgos_zvar_free(v1);
+  mgos_zvar_free(v2);
+  
+  v1 = mgos_zvar_new_decimal(10.22);
+  v2 = mgos_zvar_new_decimal(20.22);
+  ASSERT(mgos_zvar_cmp(v1, v2) < 0);
+  ASSERT(mgos_zvar_cmp(v2, v1) > 0);
+  mgos_zvar_set_decimal(v2, 10.22);
+  ASSERT(mgos_zvar_cmp(v1, v2) == 0);
+  mgos_zvar_free(v1);
+  mgos_zvar_free(v2);
+  
+  v1 = mgos_zvar_new_bool(false);
+  v2 = mgos_zvar_new_bool(true);
+  ASSERT(mgos_zvar_cmp(v1, v2) < 0);
+  ASSERT(mgos_zvar_cmp(v2, v1) > 0);
+  mgos_zvar_set_bool(v2, false);
+  ASSERT(mgos_zvar_cmp(v1, v2) == 0);
+  mgos_zvar_free(v1);
+  mgos_zvar_free(v2);
+  
   v1 = mgos_zvar_new_str("Marco");
   v2 = mgos_zvar_new();
   mgos_zvar_copy(v1, v2);
-  ASSERT(mgos_zvar_is_equal(v1, v2));
+  ASSERT(mgos_zvar_cmp(v1, v2) == 0);
   mgos_zvar_free(v1);
   mgos_zvar_free(v2);
   
   v1 = mgos_zvar_new_integer(124);
   v2 = mgos_zvar_new();
   mgos_zvar_copy(v1, v2);
-  ASSERT(mgos_zvar_is_equal(v1, v2));
+  ASSERT(mgos_zvar_cmp(v1, v2) == 0);
   mgos_zvar_free(v1);
   mgos_zvar_free(v2);
   
   v1 = mgos_zvar_new_decimal(123.88);
   v2 = mgos_zvar_new();
   mgos_zvar_copy(v1, v2);
-  ASSERT(mgos_zvar_is_equal(v1, v2));
+  ASSERT(mgos_zvar_cmp(v1, v2) == 0);
   mgos_zvar_free(v1);
   mgos_zvar_free(v2);
   
   v1 = mgos_zvar_new_bool(true);
   v2 = mgos_zvar_new();
   mgos_zvar_copy(v1, v2);
-  ASSERT(mgos_zvar_is_equal(v1, v2));
+  ASSERT(mgos_zvar_cmp(v1, v2) == 0);
   mgos_zvar_free(v1);
   mgos_zvar_free(v2);
   
   v1 = mgos_zvar_new_integer(1001);
   v2 = mgos_zvar_new_integer(1001);
-  ASSERT(mgos_zvar_is_equal(v1, v2));
+  ASSERT(mgos_zvar_cmp(v1, v2) == 0);
   mgos_zvar_free(v1);
   mgos_zvar_free(v2);
   
   v1 = mgos_zvar_new_decimal(1001);
   v2 = mgos_zvar_new_decimal(1001.00);
-  ASSERT(mgos_zvar_is_equal(v1, v2));
+  ASSERT(mgos_zvar_cmp(v1, v2) == 0);
   mgos_zvar_free(v1);
   mgos_zvar_free(v2);
  
   v1 = mgos_zvar_new_bool(true);
   v2 = mgos_zvar_new_bool(false);
-  ASSERT(!mgos_zvar_is_equal(v1, v2));
+  ASSERT(mgos_zvar_cmp(v1, v2) != 0);
   ASSERT(mgos_zvar_get_bool(v1) == true);
   ASSERT(mgos_zvar_get_bool(v2) == false);
   mgos_zvar_free(v1);
@@ -579,7 +640,7 @@ int main()
   {
     mgos_zvar_t v = NULL; const char *k = NULL; int i = 0;
     for (i = 0; mgos_zvar_get_next_key(&e1, &v, &k); ++i) {
-      ASSERT(mgos_zvar_is_equal(mgos_zvar_get_ckey(v1, k), v));
+      ASSERT(mgos_zvar_cmp(mgos_zvar_get_ckey(v1, k), v) == 0);
     }
     ASSERT(i == mgos_zvar_length(v1));
   }
@@ -595,7 +656,7 @@ int main()
   {
     mgos_zvarc_t v = NULL; const char *k = NULL; int i = 0;
     for (i = 0; mgos_zvar_get_next_ckey(&e1, &v, &k); ++i) {
-      ASSERT(mgos_zvar_is_equal(mgos_zvar_get_ckey(v1, k), v));
+      ASSERT(mgos_zvar_cmp(mgos_zvar_get_ckey(v1, k), v) == 0);
     }
     ASSERT(i == mgos_zvar_length(v1));
   }

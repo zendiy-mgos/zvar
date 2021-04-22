@@ -5,8 +5,10 @@ Mongoose OS library implementing variant variables (like `var` statement in java
 * Integer (`long`)
 * Decimal (`double`)
 * String (`char *`)
-* Dictionary (key/value pair dictionary) - It requires msog_zvar_dic libray.
+* Dictionary (key/value pair dictionary) - This requires you to include the [msog_zvar_dic libray](https://github.com/zendiy-mgos/zvar-dic) in your porject.
 
+**TIP:** ZenVar variables support JSON serialization/deserialization as well. Just include the [msog_zvar_json libray](https://github.com/zendiy-mgos/zvar-json) in your porject.
+## Get Started
 ```c
 // `NULL` variable initialization (like void* var = `NULL`)
 mgos_zvar_t var = mgos_zvar_new();
@@ -93,7 +95,7 @@ Sets the variable value. This is a specialized version of `mgos_zvar_set_str` In
 |--|--|
 |var|Variant variable.|
 |value|String value to set.|
-|value_len|Maximum number of characters to be set. Ignored if the passed `value` parameter is `NULL`.|
+|value_len|Maximum number of characters to be set. Ignored if `value` parameter is `NULL`.|
 ### mgos_zvar_get_integer(), mgos_zvar_get_bool(), mgos_zvar_get_decimal() and mgos_zvar_get_str()
 ```c 
 long mgos_zvar_get_integer(mgos_zvarc_t var);
@@ -116,16 +118,25 @@ The returned value depends on the input variable data-type. Please refer to deta
 |mgos_zvar_get_bool|Returns `false` if input value is `0`|Returns the boolean value|Returns `false` if input value is `0.0`|Returns `false` if input string is empty|Returns `false`|
 |mgos_zvar_get_decimal|Returns the input value as decimal|Returns `0.0`|Returns the decimal value|Returns `0.0`|Returns `0.0`|
 |mgos_zvar_get_str|Returns `NULL`|Returns `NULL`|Returns `NULL`|Returns the string value|Returns `NULL`|
-### mgos_zvar_is_equal()
+### mgos_zvar_cmp()
 ```c
-bool mgos_zvar_is_equal(mgos_zvarc_t var1, mgos_zvarc_t var2);
+int mgos_zvar_cmp(mgos_zvarc_t var1, mgos_zvarc_t var2);
 ```
-Compares two variables. Returns `true` if they are equal, otherwise `false`.
+Compares variale *var1* to variable *var2*. Returns `INT_MAX` in case of error.
 
 |Parameter||
 |--|--|
 |var1|Variant variable.|
 |var2|Variant variable.| 
+
+**Remarks**
+
+Returns an integral value indicating the relationship between the variables:
+|Return value||
+|--|--|
+|<0|The value of *var1* is minor than the value of *var2*. If one or both of the variables are dictionaries, they are not equal.|
+|0|The two variables are equal.|
+|>0|The value of *var1* is minor than the value of *var2*.|
 ### mgos_zvar_is_null()
 ```c
 bool mgos_zvar_is_null(mgos_zvarc_t var);
@@ -158,7 +169,7 @@ Returns the number of items in a dictionary the string length. Returns `0` in al
 ```c
 void mgos_zvar_set_unchanged(mgos_zvar_t var);
 ```
-Marks the variable as unchanged. This function could be used in compination with `mgos_zvar_is_changed`.
+Marks the variable as unchanged. This function could be used in combination with `mgos_zvar_is_changed`.
 
 |Parameter||
 |--|--|
