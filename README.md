@@ -122,7 +122,7 @@ The returned value depends on the input variable data-type. Please refer to deta
 ```c
 int mgos_zvar_cmp(mgos_zvarc_t var1, mgos_zvarc_t var2);
 ```
-Compares variale *var1* to variable *var2*. Returns `INT_MAX` in case of error.
+Compares variable *var1* to variable *var2*. Returns `INT_MAX` in case of error.
 
 |Parameter||
 |--|--|
@@ -131,11 +131,11 @@ Compares variale *var1* to variable *var2*. Returns `INT_MAX` in case of error.
 
 **Remarks**
 
-Returns an integral value indicating the relationship between the variables:
+Returns an integer value indicating the relationship between the variables:
 |Return value||
 |--|--|
 |<0|The value of *var1* is minor than the value of *var2*. If one or both of the variables are dictionaries, they are not equal.|
-|0|The two variables are equal.|
+|0|The two variables are equal. If both of the variables are dictionaries, they contain the same keys, regardless their order.|
 |>0|The value of *var1* is minor than the value of *var2*.|
 ### mgos_zvar_is_null()
 ```c
