@@ -154,8 +154,8 @@ Copies the source variable into the destination one. Returns `true` if copied su
 
 |Parameter||
 |--|--|
-|src|Source variant variable.|
-|dest|Destination variant variable.|
+|src_var|Source variant variable.|
+|dest_var|Destination variant variable.|
 ### mgos_zvar_length()
 ```c
 int mgos_zvar_length(mgos_zvarc_t var); 
