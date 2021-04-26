@@ -54,7 +54,7 @@ Returns the variable [data-type](https://github.com/zendiy-mgos/zvar#enum-mgos_z
 ```c
 mgos_zvar_t mgos_zvar_new();
 ```
-Creates a variable and initializes it to `NULL`, with no data-type defined. Returns `NULL` in case of error. 
+Creates a variable and initializes it to `NULL`, with no data-type defined. Returns `NULL` if error. 
 ### mgos_zvar_new_integer(), mgos_zvar_new_bool(), mgos_zvar_new_decimal() and mgos_zvar_new_str()
 ```c       
 mgos_zvar_t mgos_zvar_new_integer(long value);
@@ -62,7 +62,7 @@ mgos_zvar_t mgos_zvar_new_bool(bool value);
 mgos_zvar_t mgos_zvar_new_decimal(double value);
 mgos_zvar_t mgos_zvar_new_str(const char *value);
 ```
-Creates and initializes a variable. Returns `NULL` in case of error. Invoking `mgos_zvar_new_str(NULL)` is equivalent to `mgos_zvar_new()`.
+Creates and initializes a variable. Returns `NULL` if error. Invoking `mgos_zvar_new_str(NULL)` is equivalent to `mgos_zvar_new()`.
 
 |Parameter||
 |--|--|
@@ -126,7 +126,7 @@ The returned value depends on the input variable data-type. Please refer to deta
 ```c
 int mgos_zvar_cmp(mgos_zvarc_t var1, mgos_zvarc_t var2);
 ```
-Compares variable *var1* to variable *var2*. Returns `INT_MAX` in case of error.
+Compares variable *var1* to variable *var2*. Returns `INT_MAX` if error.
 
 |Parameter||
 |--|--|
