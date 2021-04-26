@@ -431,8 +431,8 @@ int main()
   
   v1 = mgos_zvar_new_dic();
   mgos_zvar_add_key(v1, "Name", mgos_zvar_new_str("Mark"));
-  ASSERT(mgos_zvar_try_get_ckey(v1, "Name", &cv1) == true);
-  ASSERT(mgos_zvar_try_get_ckey(v1, "Age", &cv1) == false);
+  ASSERT(mgos_zvarc_try_get_key(v1, "Name", &cv1) == true);
+  ASSERT(mgos_zvarc_try_get_key(v1, "Age", &cv1) == false);
   ASSERT(mgos_zvar_try_get_key(v1, "Age", &v2) == false);
   ASSERT(mgos_zvar_try_get_key(v1, "Name", &v2) == true);
   mgos_zvar_set_str(v2, "Greg");

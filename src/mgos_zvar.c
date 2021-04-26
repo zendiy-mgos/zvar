@@ -721,7 +721,7 @@ mgos_zvar_t mgos_zvar_get_key(mgos_zvar_t var, const char *key) {
 }
 
 bool mgos_zvar_try_get_key(mgos_zvar_t var, const char *key, mgos_zvar_t *out) {
-  return mgos_zvar_try_get_ckey(var, key, (mgos_zvarc_t *)out);
+  return mgos_zvarc_try_get_key(var, key, (mgos_zvarc_t *)out);
 }
 
 bool mgos_zvar_get_next_key(mgos_zvar_enum_t *key_enum, mgos_zvar_t *out, const char **key_name) {
@@ -732,7 +732,7 @@ mgos_zvarc_t mgos_zvar_get_ckey(mgos_zvarc_t var, const char *key) {
   return mg_zvar_dic_get((mgos_zvar_t)var, key, (key ? strlen(key) : 0), false);
 }
 
-bool mgos_zvar_try_get_ckey(mgos_zvarc_t var, const char *key, mgos_zvarc_t *out) {
+bool mgos_zvarc_try_get_key(mgos_zvarc_t var, const char *key, mgos_zvarc_t *out) {
   mgos_zvarc_t ret = mgos_zvar_get_ckey(var, key);
   if (out) *out = ret;
   return (ret != NULL);
