@@ -655,7 +655,7 @@ int main()
   ASSERT(e1 != NULL);
   {
     mgos_zvarc_t v = NULL; const char *k = NULL; int i = 0;
-    for (i = 0; mgos_zvar_get_next_ckey(&e1, &v, &k); ++i) {
+    for (i = 0; mgos_zvarc_get_next_key(&e1, &v, &k); ++i) {
       ASSERT(mgos_zvar_cmp(mgos_zvar_get_ckey(v1, k), v) == 0);
     }
     ASSERT(i == mgos_zvar_length(v1));

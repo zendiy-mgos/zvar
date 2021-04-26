@@ -45,7 +45,7 @@ ZenVar variant data-types.
 ```c
 enum mgos_zvar_type mgos_zvar_get_type(mgos_zvarc_t var);
 ```
-Returns the variable [data-type](https://github.com/zendiy-mgos/zvar#enum-mgos_zvar_get_type).
+Returns the variable [data-type](https://github.com/zendiy-mgos/zvar#enum-mgos_zvar_get_type). if the variable is a dictionary, returns `MGOS_ZVAR_TYPE_DIC`.
 
 |Parameter||
 |--|--|
