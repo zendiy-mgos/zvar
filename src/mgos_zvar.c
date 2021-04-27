@@ -717,7 +717,7 @@ bool mgos_zvar_add_key(mgos_zvar_t var, const char *key, mgos_zvar_t val) {
 }
 
 mgos_zvar_t mgos_zvar_get_key(mgos_zvar_t var, const char *key) {
-  return (mgos_zvar_t)mgos_zvar_get_ckey(var, key);
+  return (mgos_zvar_t)mgos_zvarc_get_key(var, key);
 }
 
 bool mgos_zvar_try_get_key(mgos_zvar_t var, const char *key, mgos_zvar_t *out) {
@@ -728,12 +728,12 @@ bool mgos_zvar_get_next_key(mgos_zvar_enum_t *key_enum, mgos_zvar_t *out, const 
   return mgos_zvarc_get_next_key((mgos_zvarc_enum_t *)key_enum, (mgos_zvarc_t *)out, key_name);
 }
 
-mgos_zvarc_t mgos_zvar_get_ckey(mgos_zvarc_t var, const char *key) {
+mgos_zvarc_t mgos_zvarc_get_key(mgos_zvarc_t var, const char *key) {
   return mg_zvar_dic_get((mgos_zvar_t)var, key, (key ? strlen(key) : 0), false);
 }
 
 bool mgos_zvarc_try_get_key(mgos_zvarc_t var, const char *key, mgos_zvarc_t *out) {
-  mgos_zvarc_t ret = mgos_zvar_get_ckey(var, key);
+  mgos_zvarc_t ret = mgos_zvarc_get_key(var, key);
   if (out) *out = ret;
   return (ret != NULL);
 }
@@ -765,7 +765,7 @@ mgos_zvar_enum_t mgos_zvar_get_keys(mgos_zvar_t var) {
   return (mgos_zvar_enum_t)var;
 }
 
-mgos_zvar_enum_t mgos_zvarc_get_keys(mgos_zvarc_t var) {
+mgos_zvarc_enum_t mgos_zvarc_get_keys(mgos_zvarc_t var) {
   return (mgos_zvarc_enum_t)var;
 }
 

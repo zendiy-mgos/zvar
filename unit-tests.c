@@ -50,7 +50,7 @@ int main()
   mgos_zvar_t v1 = NULL, v2 = NULL;
   mgos_zvarc_t cv1 = NULL;
   #if MGOS_ZVAR_HAVE_DIC
-  mgos_zvar_enum_t e1 = NULL;
+  mgos_zvarc_enum_t e1 = NULL;
   #endif
   const char *key1, key2;
   char *json;
@@ -436,7 +436,7 @@ int main()
   ASSERT(mgos_zvar_try_get_key(v1, "Age", &v2) == false);
   ASSERT(mgos_zvar_try_get_key(v1, "Name", &v2) == true);
   mgos_zvar_set_str(v2, "Greg");
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(v1, "Name")), "Greg") == 0);
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(v1, "Name")), "Greg") == 0);
   mgos_zvar_free(v1);
    
   v1 = mgos_zvar_new_dic();
@@ -463,8 +463,8 @@ int main()
   v1 = mgos_zvar_new_dic();
   mgos_zvar_add_key(v1, "Name", mgos_zvar_new_str("Mark"));
   mgos_zvar_add_key(v1, "Age", mgos_zvar_new_integer(46));
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(v1, "Name")), "Mark") == 0);
-  ASSERT(mgos_zvar_get_integer(mgos_zvar_get_ckey(v1, "Age")) == 46);
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(v1, "Name")), "Mark") == 0);
+  ASSERT(mgos_zvar_get_integer(mgos_zvarc_get_key(v1, "Age")) == 46);
   ASSERT(mgos_zvar_length(v1) == 2);
   mgos_zvar_free(v1);
   
@@ -473,8 +473,8 @@ int main()
   mgos_zvar_add_key(v2, "Name", mgos_zvar_new_str("Mark"));
   mgos_zvar_add_key(v2, "Age", mgos_zvar_new_integer(46));
   mgos_zvar_copy(v2, v1);
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(v1, "Name")), "Mark") == 0);
-  ASSERT(mgos_zvar_get_integer(mgos_zvar_get_ckey(v1, "Age")) == 46);
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(v1, "Name")), "Mark") == 0);
+  ASSERT(mgos_zvar_get_integer(mgos_zvarc_get_key(v1, "Age")) == 46);
   ASSERT(mgos_zvar_length(v1) == 2);
   mgos_zvar_free(v1);
   mgos_zvar_free(v2);
@@ -486,7 +486,7 @@ int main()
   v2 = mgos_zvar_new();
   mgos_zvar_add_key(v2, "Surname", mgos_zvar_new_str("Smith"));
   mgos_zvar_copy(v2, v1);
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(v1, "Surname")), "Smith") == 0);
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(v1, "Surname")), "Smith") == 0);
   ASSERT(mgos_zvar_length(v1) == 1);
   mgos_zvar_free(v1);
   mgos_zvar_free(v2);
@@ -498,7 +498,7 @@ int main()
   mgos_zvar_add_key(v2, "Age", mgos_zvar_new_integer(46));
   mgos_zvar_copy(v1, v2);
   ASSERT(mgos_zvar_length(v2) == 1);
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(v2, "Surname")), "Smith") == 0);
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(v2, "Surname")), "Smith") == 0);
   mgos_zvar_free(v1);
   mgos_zvar_free(v2);
   
@@ -535,7 +535,7 @@ int main()
   
   v1 = mgos_zvar_new();
   mgos_zvar_add_key(v1, "Age", mgos_zvar_new_integer(46));
-  ASSERT(mgos_zvar_get_integer(mgos_zvar_get_ckey(v1, "Age")) == 46);
+  ASSERT(mgos_zvar_get_integer(mgos_zvarc_get_key(v1, "Age")) == 46);
   ASSERT(mgos_zvar_length(v1) == 1);
   mgos_zvar_free(v1);
    
@@ -554,7 +554,7 @@ int main()
   mgos_zvar_add_key(v1, "Name", mgos_zvar_new_str("Mark"));
   ASSERT(mgos_zvar_is_dic(v1));
   ASSERT(mgos_zvar_length(v1) == 1);
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(v1, "Name")), "Mark") == 0);
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(v1, "Name")), "Mark") == 0);
   ASSERT(mgos_zvar_get_str(v1) == NULL);
   mgos_zvar_free(v1);
  
@@ -564,7 +564,7 @@ int main()
   mgos_zvar_add_key(v1, "Name", mgos_zvar_new_str("Mark"));
   ASSERT(mgos_zvar_is_dic(v1));
   ASSERT(mgos_zvar_length(v1) == 1);
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(v1, "Name")), "Mark") == 0);
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(v1, "Name")), "Mark") == 0);
   ASSERT(mgos_zvar_get_str(v1) == NULL);
   mgos_zvar_free(v1);
   
@@ -574,7 +574,7 @@ int main()
   mgos_zvar_add_key(v1, "Name", mgos_zvar_new_str("Mark"));
   ASSERT(mgos_zvar_is_dic(v1));
   ASSERT(mgos_zvar_length(v1) == 1);
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(v1, "Name")), "Mark") == 0);
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(v1, "Name")), "Mark") == 0);
   ASSERT(mgos_zvar_get_str(v1) == NULL);
   mgos_zvar_free(v1);
   
@@ -584,7 +584,7 @@ int main()
   mgos_zvar_add_key(v1, "Name", mgos_zvar_new_str("Mark"));
   ASSERT(mgos_zvar_is_dic(v1));
   ASSERT(mgos_zvar_length(v1) == 1);
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(v1, "Name")), "Mark") == 0);
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(v1, "Name")), "Mark") == 0);
   ASSERT(mgos_zvar_get_str(v1) == NULL);
   mgos_zvar_free(v1);
   
@@ -594,7 +594,7 @@ int main()
   mgos_zvar_add_key(v1, "Name", mgos_zvar_new_str("Mark"));
   ASSERT(mgos_zvar_is_dic(v1));
   ASSERT(mgos_zvar_length(v1) == 1);
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(v1, "Name")), "Mark") == 0);
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(v1, "Name")), "Mark") == 0);
   ASSERT(mgos_zvar_get_str(v1) == NULL);
   mgos_zvar_free(v1);
   
@@ -620,14 +620,14 @@ int main()
   ASSERT(!mgos_zvar_is_dic(v1));
   e1 = mgos_zvar_get_keys(v1);
   ASSERT(e1 != NULL);
-  ASSERT(mgos_zvar_get_next_key(&e1, NULL, NULL) == false);
+  ASSERT(mgos_zvarc_get_next_key(&e1, NULL, NULL) == false);
   mgos_zvar_free(v1);
   
   v1 = mgos_zvar_new_dic();
   ASSERT(mgos_zvar_is_dic(v1));
   e1 = mgos_zvar_get_keys(v1);
   ASSERT(e1 != NULL);
-  ASSERT(mgos_zvar_get_next_key(&e1, NULL, NULL) == false);
+  ASSERT(mgos_zvarc_get_next_key(&e1, NULL, NULL) == false);
   mgos_zvar_free(v1);
 
   v1 = mgos_zvar_new();
@@ -635,12 +635,12 @@ int main()
   mgos_zvar_add_key(v1, "Age", mgos_zvar_new_integer(46));
   mgos_zvar_add_key(v1, "Weigth", mgos_zvar_new_decimal(90.2));
   ASSERT(mgos_zvar_is_dic(v1));
-  e1 = mgos_zvar_get_keys(v1);
+  e1 = mgos_zvarc_get_keys(v1);
   ASSERT(e1 != NULL);
   {
-    mgos_zvar_t v = NULL; const char *k = NULL; int i = 0;
-    for (i = 0; mgos_zvar_get_next_key(&e1, &v, &k); ++i) {
-      ASSERT(mgos_zvar_cmp(mgos_zvar_get_ckey(v1, k), v) == 0);
+    mgos_zvarc_t v = NULL; const char *k = NULL; int i = 0;
+    for (i = 0; mgos_zvarc_get_next_key(&e1, &v, &k); ++i) {
+      ASSERT(mgos_zvar_cmp(mgos_zvarc_get_key(v1, k), v) == 0);
     }
     ASSERT(i == mgos_zvar_length(v1));
   }
@@ -656,7 +656,7 @@ int main()
   {
     mgos_zvarc_t v = NULL; const char *k = NULL; int i = 0;
     for (i = 0; mgos_zvarc_get_next_key(&e1, &v, &k); ++i) {
-      ASSERT(mgos_zvar_cmp(mgos_zvar_get_ckey(v1, k), v) == 0);
+      ASSERT(mgos_zvar_cmp(mgos_zvarc_get_key(v1, k), v) == 0);
     }
     ASSERT(i == mgos_zvar_length(v1));
   }
@@ -687,7 +687,7 @@ int main()
   mgos_zvar_add_key(v2, "Type", mgos_zvar_new_str("EMPLOYEE"));
   ASSERT(mgos_zvar_length(v1) == 3);
   ASSERT(mgos_zvar_length(v2) == 2);
-  ASSERT(mgos_zvar_length(mgos_zvar_get_ckey(v2, "Employee")) == 3);
+  ASSERT(mgos_zvar_length(mgos_zvarc_get_key(v2, "Employee")) == 3);
   mgos_zvar_free(v1);
   ASSERT(mgos_zvar_length(v2) == 1);
   ASSERT(!mgos_zvar_has_key(v2, "Employee"));
@@ -707,7 +707,7 @@ int main()
   ASSERT(!mgos_zvar_is_changed(v2));
   ASSERT(!mgos_zvar_is_changed(v1));
   mgos_zvar_set_integer(mgos_zvar_get_key(mgos_zvar_get_key(v2, "Employee"), "Code"), 888);
-  ASSERT(mgos_zvar_get_integer(mgos_zvar_get_ckey(v1, "Code")) == 888);
+  ASSERT(mgos_zvar_get_integer(mgos_zvarc_get_key(v1, "Code")) == 888);
   ASSERT(mgos_zvar_is_changed(v2));
   ASSERT(mgos_zvar_is_changed(v1));
   mgos_zvar_free(v1);
@@ -839,62 +839,62 @@ int main()
   v1 = mgos_zvar_json_scanf("{\"Name\":\"Mark\",\"Surname\":null,\"Age\":46,\"Weigth\":102.440000,\"Enable\":true}");
   ASSERT(mgos_zvar_is_dic(v1));
   ASSERT(mgos_zvar_length(v1) == 5);
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(v1, "Name")), "Mark") == 0);
-  ASSERT(mgos_zvar_is_null(mgos_zvar_get_ckey(v1, "Surname")));
-  ASSERT(mgos_zvar_get_integer(mgos_zvar_get_ckey(v1, "Age")) == 46);
-  ASSERT(mgos_zvar_get_decimal(mgos_zvar_get_ckey(v1, "Weigth")) == 102.44);
-  ASSERT(mgos_zvar_get_bool(mgos_zvar_get_ckey(v1, "Enable")) == true);
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(v1, "Name")), "Mark") == 0);
+  ASSERT(mgos_zvar_is_null(mgos_zvarc_get_key(v1, "Surname")));
+  ASSERT(mgos_zvar_get_integer(mgos_zvarc_get_key(v1, "Age")) == 46);
+  ASSERT(mgos_zvar_get_decimal(mgos_zvarc_get_key(v1, "Weigth")) == 102.44);
+  ASSERT(mgos_zvar_get_bool(mgos_zvarc_get_key(v1, "Enable")) == true);
   mgos_zvar_free(v1);
 
   v1 = mgos_zvar_json_scanf("{\"Fhater\":{\"Name\":\"Gregory\",\"Age\":80}}");
   ASSERT(!mgos_zvar_is_changed(v1));
-  ASSERT(!mgos_zvar_is_changed(mgos_zvar_get_ckey(v1, "Fhater")));
+  ASSERT(!mgos_zvar_is_changed(mgos_zvarc_get_key(v1, "Fhater")));
   mgos_zvar_free(v1);
   
   v1 = mgos_zvar_json_scanf("{\"Fhater\":{\"Name\":\"Gregory\",\"Age\":80}}");
   ASSERT(mgos_zvar_is_dic(v1));
   ASSERT(mgos_zvar_length(v1) == 1);
-  cv1 = mgos_zvar_get_ckey(v1, "Fhater");
+  cv1 = mgos_zvarc_get_key(v1, "Fhater");
   ASSERT(mgos_zvar_is_dic(cv1));
   ASSERT(mgos_zvar_length(cv1) == 2);
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(cv1, "Name")), "Gregory") == 0);
-  ASSERT(mgos_zvar_get_integer(mgos_zvar_get_ckey(cv1, "Age")) == 80);
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(cv1, "Name")), "Gregory") == 0);
+  ASSERT(mgos_zvar_get_integer(mgos_zvarc_get_key(cv1, "Age")) == 80);
   mgos_zvar_free(v1);
 
   v1 = mgos_zvar_json_scanf("{\"Name\":\"Mark\",\"Age\":46,\"Fhater\":{\"Name\":\"Gregory\",\"Age\":80}}");
   ASSERT(mgos_zvar_is_dic(v1));
   ASSERT(mgos_zvar_length(v1) == 3);
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(v1, "Name")), "Mark") == 0);
-  ASSERT(mgos_zvar_get_integer(mgos_zvar_get_ckey(v1, "Age")) == 46);
-  cv1 = mgos_zvar_get_ckey(v1, "Fhater");
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(v1, "Name")), "Mark") == 0);
+  ASSERT(mgos_zvar_get_integer(mgos_zvarc_get_key(v1, "Age")) == 46);
+  cv1 = mgos_zvarc_get_key(v1, "Fhater");
   ASSERT(mgos_zvar_is_dic(cv1));
   ASSERT(mgos_zvar_length(cv1) == 2);
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(cv1, "Name")), "Gregory") == 0);
-  ASSERT(mgos_zvar_get_integer(mgos_zvar_get_ckey(cv1, "Age")) == 80);
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(cv1, "Name")), "Gregory") == 0);
+  ASSERT(mgos_zvar_get_integer(mgos_zvarc_get_key(cv1, "Age")) == 80);
   mgos_zvar_free(v1);
   
   v1 = mgos_zvar_json_scanf("{\"Name\":\"Mark\",\"Fhater\":{\"Name\":\"Gregory\",\"Age\":80},\"Age\":46}");
   ASSERT(mgos_zvar_is_dic(v1));
   ASSERT(mgos_zvar_length(v1) == 3);
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(v1, "Name")), "Mark") == 0);
-  ASSERT(mgos_zvar_get_integer(mgos_zvar_get_ckey(v1, "Age")) == 46);
-  cv1 = mgos_zvar_get_ckey(v1, "Fhater");
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(v1, "Name")), "Mark") == 0);
+  ASSERT(mgos_zvar_get_integer(mgos_zvarc_get_key(v1, "Age")) == 46);
+  cv1 = mgos_zvarc_get_key(v1, "Fhater");
   ASSERT(mgos_zvar_is_dic(cv1));
   ASSERT(mgos_zvar_length(cv1) == 2);
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(cv1, "Name")), "Gregory") == 0);
-  ASSERT(mgos_zvar_get_integer(mgos_zvar_get_ckey(cv1, "Age")) == 80);
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(cv1, "Name")), "Gregory") == 0);
+  ASSERT(mgos_zvar_get_integer(mgos_zvarc_get_key(cv1, "Age")) == 80);
   mgos_zvar_free(v1);
  
   v1 = mgos_zvar_json_scanf("{\"Fhater\":{\"Name\":\"Gregory\",\"Age\":80},\"Age\":46,\"Name\":\"Mark\"}");
   ASSERT(mgos_zvar_is_dic(v1));
   ASSERT(mgos_zvar_length(v1) == 3);
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(v1, "Name")), "Mark") == 0);
-  ASSERT(mgos_zvar_get_integer(mgos_zvar_get_ckey(v1, "Age")) == 46);
-  cv1 = mgos_zvar_get_ckey(v1, "Fhater");
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(v1, "Name")), "Mark") == 0);
+  ASSERT(mgos_zvar_get_integer(mgos_zvarc_get_key(v1, "Age")) == 46);
+  cv1 = mgos_zvarc_get_key(v1, "Fhater");
   ASSERT(mgos_zvar_is_dic(cv1));
   ASSERT(mgos_zvar_length(cv1) == 2);
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(cv1, "Name")), "Gregory") == 0);
-  ASSERT(mgos_zvar_get_integer(mgos_zvar_get_ckey(cv1, "Age")) == 80);
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(cv1, "Name")), "Gregory") == 0);
+  ASSERT(mgos_zvar_get_integer(mgos_zvarc_get_key(cv1, "Age")) == 80);
   mgos_zvar_free(v1);
   
   v1 = mgos_zvar_json_scanf("{}");
@@ -906,17 +906,17 @@ int main()
   v1 = mgos_zvar_json_scanf("{\"Name\":\"Mark\",\"Fhater\":{\"Name\":\"Gregory\",\"Age\":80, \"Mother\":{\"Name\":\"Mary\",\"Age\":79}},\"Age\":46}");
   ASSERT(mgos_zvar_is_dic(v1));
   ASSERT(mgos_zvar_length(v1) == 3);
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(v1, "Name")), "Mark") == 0);
-  ASSERT(mgos_zvar_get_integer(mgos_zvar_get_ckey(v1, "Age")) == 46);
-  cv1 = mgos_zvar_get_ckey(v1, "Fhater");
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(v1, "Name")), "Mark") == 0);
+  ASSERT(mgos_zvar_get_integer(mgos_zvarc_get_key(v1, "Age")) == 46);
+  cv1 = mgos_zvarc_get_key(v1, "Fhater");
   ASSERT(mgos_zvar_is_dic(cv1));
   ASSERT(mgos_zvar_length(cv1) == 3);
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(cv1, "Name")), "Gregory") == 0);
-  ASSERT(mgos_zvar_get_integer(mgos_zvar_get_ckey(cv1, "Age")) == 80);
-  cv1 = mgos_zvar_get_ckey(cv1, "Mother");
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(cv1, "Name")), "Gregory") == 0);
+  ASSERT(mgos_zvar_get_integer(mgos_zvarc_get_key(cv1, "Age")) == 80);
+  cv1 = mgos_zvarc_get_key(cv1, "Mother");
   ASSERT(mgos_zvar_length(cv1) == 2);
-  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvar_get_ckey(cv1, "Name")), "Mary") == 0);
-  ASSERT(mgos_zvar_get_integer(mgos_zvar_get_ckey(cv1, "Age")) == 79);
+  ASSERT(strcmp(mgos_zvar_get_str(mgos_zvarc_get_key(cv1, "Name")), "Mary") == 0);
+  ASSERT(mgos_zvar_get_integer(mgos_zvarc_get_key(cv1, "Age")) == 79);
   mgos_zvar_free(v1);
   
   #endif // MGOS_ZVAR_HAVE_JSON

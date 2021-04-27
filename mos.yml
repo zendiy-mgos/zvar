@@ -5,11 +5,15 @@ version: 1.0
 
 sources:
   - src
+
 includes:
   - include
+
 filesystem:
   - fs
+
 config_schema:
+
 libs:
 
 tags:
