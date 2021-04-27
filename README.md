@@ -6,7 +6,7 @@ This Mongoose OS library allows you to create variant variables which haven't da
 - Integer (`long`)
 - Decimal (`double`)
 - String (`char *`)
-- Dictionary (key/value pair dictionary) - This requires you to include the [msog_zvar_dic libray](https://github.com/zendiy-mgos/zvar-dic) in your porject.
+- Dictionary (key/value pair dictionary) - This requires you to include the [ZenVar Dictionary library](https://github.com/zendiy-mgos/zvar-dic) in your porject.
 ## Features
 - **JSON support** - You can dynamically create a variant varibale from a JSON string or you can save it as JSON in a very easy way. Just include the [ZenVar JSON library](https://github.com/zendiy-mgos/zvar-json) into your project. 
 ## Get Started
@@ -21,11 +21,11 @@ Create new variant variables.
 ```c
 #include "mgos_zvar.h"
 
-mgos_zvar_t n = mgos_zvar_new(); // Type-less(NULL) (void *n = NULL)
-mgos_zvar_t i = mgos_zvar_new_integer(101); // Integer (long i = 101;)
-mgos_zvar_t b = mgos_zvar_new_bool(true); // Boolean (bool b = true;)
-mgos_zvar_t d = mgos_zvar_new_decimal(101.99); // Decimal (double d = 101.99;)
-mgos_zvar_t s = mgos_zvar_new_str("Lorem Ipsum"); // String (char *s = "Lorem Ipsum";)
+mgos_zvar_t n = mgos_zvar_new();                  // void *n = NULL; (type-less var)
+mgos_zvar_t i = mgos_zvar_new_integer(101);       // long i = 101;
+mgos_zvar_t b = mgos_zvar_new_bool(true);         // bool b = true;
+mgos_zvar_t d = mgos_zvar_new_decimal(101.99);    // double d = 101.99;
+mgos_zvar_t s = mgos_zvar_new_str("Lorem Ipsum"); // char *s = "Lorem Ipsum";
 ```
 ## C/C++ API Reference
 ### enum mgos_zvar_type
@@ -47,12 +47,12 @@ Returns the variable [data-type](https://github.com/zendiy-mgos/zvar#enum-mgos_z
 
 |Parameter||
 |--|--|
-|var|Variant variable|
+|var|A variant variable.|
 ### mgos_zvar_new()
 ```c
 mgos_zvar_t mgos_zvar_new();
 ```
-Creates a variable and initializes it to `NULL`, with no data-type defined. Returns `NULL` if error. The returned instance must be deallocated using `mgos_zvar_free`.
+Creates a type-less variable (with no data-type defined). Returns `NULL` if error. The returned instance must be deallocated using `mgos_zvar_free`.
 ### mgos_zvar_new_integer(), mgos_zvar_new_bool(), mgos_zvar_new_decimal() and mgos_zvar_new_str()
 ```c       
 mgos_zvar_t mgos_zvar_new_integer(long value);
@@ -69,11 +69,11 @@ Creates and initializes a variable. Returns `NULL` if error. Invoking `mgos_zvar
 ```c 
 void mgos_zvar_set_null(mgos_zvar_t var);
 ```
-Sets the variable value to `NULL`.
+Sets the variable as type-less (with no data-type defined).
 
 |Parameter||
 |--|--|
-|var|Variant variable.|
+|var|A variant variable.|
 ### mgos_zvar_set_integer(), mgos_zvar_set_bool(), mgos_zvar_set_decimal() and mgos_zvar_set_str()
 ```c                                 
 void mgos_zvar_set_integer(mgos_zvar_t var, long value);
@@ -85,8 +85,8 @@ Sets the variable value. Invoking `mgos_zvar_set_str(var, NULL)` is equivalent t
 
 |Parameter||
 |--|--|
-|var|Variant variable.|
-|value|Value to be set.|
+|var|A variant variable.|
+|value|Value to set.|
 ### mgos_zvar_set_nstr()
 ```c 
 void mgos_zvar_set_nstr(mgos_zvar_t var, const char *value, size_t value_len);
@@ -95,9 +95,9 @@ Sets the variable value. This is a specialized version of `mgos_zvar_set_str` In
 
 |Parameter||
 |--|--|
-|var|Variant variable.|
+|var|A variant variable.|
 |value|String value to set.|
-|value_len|Maximum number of characters to be set. Ignored if `value` parameter is `NULL`.|
+|value_len|Maximum number of characters to set. Ignored if `value` parameter is `NULL`.|
 ### mgos_zvar_get_integer(), mgos_zvar_get_bool(), mgos_zvar_get_decimal() and mgos_zvar_get_str()
 ```c 
 long mgos_zvar_get_integer(mgos_zvarc_t var);
@@ -109,7 +109,7 @@ Returns the variable value.
 
 |Parameter||
 |--|--|
-|var|Variant variable.|
+|var|A variant variable.|
 
 **Remarks**
 
@@ -128,8 +128,8 @@ Compares variable *var1* to variable *var2*. Returns `INT_MAX` if error.
 
 |Parameter||
 |--|--|
-|var1|Variant variable.|
-|var2|Variant variable.| 
+|var1|A variant variable.|
+|var2|A variant variable.| 
 
 **Remarks**
 
@@ -143,16 +143,16 @@ Returns an integer value indicating the relationship between the variables:
 ```c
 bool mgos_zvar_is_null(mgos_zvarc_t var);
 ```
-Returns `true` if the variable value is `NULL`, otherwise `false`.
+Returns `true` if the variable value is type-less (with no data-type defined), or `false` otherwise.
 
 |Parameter||
 |--|--|
-|var|Variant variable.|
+|var|A variant variable.|
 ### mgos_zvar_copy()
 ```c
 bool mgos_zvar_copy(mgos_zvarc_t src_var, mgos_zvar_t dest_var); 
 ```
-Copies the source variable into the destination one. Returns `true` if copied successfully, otherwise `false`.
+Copies a source variable into the destination one. Returns `true` if successfully copied, or `false` otherwise.
 
 |Parameter||
 |--|--|
@@ -166,7 +166,7 @@ Returns the number of items in a dictionary or the string length. Returns `0` in
 
 |Parameter||
 |--|--|
-|var|Variant variable.|
+|var|A variant variable.|
 ### mgos_zvar_set_unchanged()
 ```c
 void mgos_zvar_set_unchanged(mgos_zvar_t var);
@@ -175,16 +175,16 @@ Marks the variable as unchanged. This function could be used in combination with
 
 |Parameter||
 |--|--|
-|var|Variant variable.|
+|var|A variant variable.|
 ### mgos_zvar_is_changed()
 ```c
 bool mgos_zvar_is_changed(mgos_zvarc_t var);
 ```
-Returns `true` if the variable value is changed since its creation or since the last call of `mgos_zvar_set_unchanged`, otherwise `false`.
+Returns `true` if the variable value is changed since its creation or since the last call of `mgos_zvar_set_unchanged`, or `false` otherwise.
 
 |Parameter||
 |--|--|
-|var|Variant variable.|
+|var|A variant variable.|
 ### mgos_zvar_free()
 ```c
 void mgos_zvar_free(mgos_zvar_t var);
@@ -193,7 +193,7 @@ Deallocates the variable. If the variable is an element of a dictionary, it is a
 
 |Parameter||
 |--|--|
-|var|Variant variable.|
+|var|A variant variable.|
 ## To Do
 - Implement variant array.
 - Implement javascript APIs for [Mongoose OS MJS](https://github.com/mongoose-os-libs/mjs).
