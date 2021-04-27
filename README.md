@@ -69,7 +69,7 @@ Creates and initializes a variable. Returns `NULL` if error. Invoking `mgos_zvar
 ```c 
 void mgos_zvar_set_null(mgos_zvar_t var);
 ```
-Sets the variable as type-less (with no data-type defined).
+Sets a variable as type-less (with no data-type defined).
 
 |Parameter||
 |--|--|
@@ -81,7 +81,7 @@ void mgos_zvar_set_bool(mgos_zvar_t var, bool value);
 void mgos_zvar_set_decimal(mgos_zvar_t var, double value);
 void mgos_zvar_set_str(mgos_zvar_t var, const char *value);
 ```
-Sets the variable value. Invoking `mgos_zvar_set_str(var, NULL)` is equivalent to `mgos_zvar_set_null(var)`.
+Sets a variable value and data-type. Invoking `mgos_zvar_set_str(var, NULL)` is equivalent to `mgos_zvar_set_null(var)`.
 
 |Parameter||
 |--|--|
@@ -91,7 +91,7 @@ Sets the variable value. Invoking `mgos_zvar_set_str(var, NULL)` is equivalent t
 ```c 
 void mgos_zvar_set_nstr(mgos_zvar_t var, const char *value, size_t value_len);
 ```
-Sets the variable value. This is a specialized version of `mgos_zvar_set_str` Invoking `mgos_zvar_set_nstr(var, NULL, <any_value>)` is equivalent to `mgos_zvar_set_null(var)`.
+Sets a variable value to the provided string. This is a specialized version of `mgos_zvar_set_str` Invoking `mgos_zvar_set_nstr(var, NULL, <any_value>)` is equivalent to `mgos_zvar_set_null(var)`.
 
 |Parameter||
 |--|--|
@@ -105,7 +105,7 @@ bool mgos_zvar_get_bool(mgos_zvarc_t var);
 double mgos_zvar_get_decimal(mgos_zvarc_t var);
 const char *mgos_zvar_get_str(mgos_zvarc_t var);
 ```
-Returns the variable value.
+Returns the value of a variable.
 
 |Parameter||
 |--|--|
