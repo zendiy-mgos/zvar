@@ -8,6 +8,7 @@ This Mongoose OS library allows you to create variant variables which haven't da
 - String (`char *`)
 - Dictionary (key/value pair dictionary) - This requires you to include the [ZenVar Dictionary library](https://github.com/zendiy-mgos/zvar-dic) in your porject.
 ## Features
+- **Observable value** - You can check it the value of a variable is changed or not.
 - **JSON support** - You can dynamically create a variant varibale from a JSON string or you can save it as JSON in a very easy way. Just include the [ZenVar JSON library](https://github.com/zendiy-mgos/zvar-json) into your project. 
 ## Get Started
 Include the library into your `mos.yml` file.
