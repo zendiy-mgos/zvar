@@ -1,33 +1,31 @@
 # ZenVar
 ## Overview
-Mongoose OS library implementing variant variables (like `var` statement in javascript). Using this library you can create variables which haven't data type declared explicitly, but any one of the followings.
+This Mongoose OS library allows you to create variant variables which haven't data type declared explicitly (like using `var` statement in javascript). You can create variables that can easily and dynamically assume any data-type within the followings:
 
-**SUPPORTED DATA-TYPES**
-* Boolean (`bool`)
-* Integer (`long`)
-* Decimal (`double`)
-* String (`char *`)
-* Dictionary (key/value pair dictionary) - This requires you to include the [msog_zvar_dic libray](https://github.com/zendiy-mgos/zvar-dic) in your porject.
-
-**JSON SUPPORT**
-
-ZenVar variables support JSON serialization/deserialization as well. Just include the [msog_zvar_json libray](https://github.com/zendiy-mgos/zvar-json) in your porject.
+- Boolean (`bool`)
+- Integer (`long`)
+- Decimal (`double`)
+- String (`char *`)
+- Dictionary (key/value pair dictionary) - This requires you to include the [msog_zvar_dic libray](https://github.com/zendiy-mgos/zvar-dic) in your porject.
+## Features
+- **JSON support** - You can dynamically create a variant varibale from a JSON string or you can save it as JSON in a very easy way. Just include the [ZenVar JSON library](https://github.com/zendiy-mgos/zvar-json) into your project. 
 ## Get Started
+Include the library into your `mos.yml` file.
+```yaml
+libs:
+  - origin: https://github.com/zendiy-mgos/zvar
+```
+**C/C++ sample code**
+
+Create new variant variables.
 ```c
-// `NULL` variable initialization (like void* var = `NULL`)
-mgos_zvar_t var = mgos_zvar_new();
+#include "mgos_zvar.h"
 
-// Integer variable initialization (like long var = 101;)
-mgos_zvar_t var = mgos_zvar_new_integer(101);
-
-// Boolean variable initialization (like bool var = true;)
-mgos_zvar_t var = mgos_zvar_new_bool(true);
-
-// Decimal variable initialization (like double var = 101.99;)
-mgos_zvar_t var = mgos_zvar_new_decimal(101.99);
-
-// String variable initialization (like char *var = "Lorem Ipsum";)
-mgos_zvar_t var = mgos_zvar_new_str("Lorem Ipsum");
+mgos_zvar_t n = mgos_zvar_new(); // Type-less(NULL) (void *n = NULL)
+mgos_zvar_t i = mgos_zvar_new_integer(101); // Integer (long i = 101;)
+mgos_zvar_t b = mgos_zvar_new_bool(true); // Boolean (bool b = true;)
+mgos_zvar_t d = mgos_zvar_new_decimal(101.99); // Decimal (double d = 101.99;)
+mgos_zvar_t s = mgos_zvar_new_str("Lorem Ipsum"); // String (char *s = "Lorem Ipsum";)
 ```
 ## C/C++ API Reference
 ### enum mgos_zvar_type
@@ -45,7 +43,7 @@ ZenVar variant data-types.
 ```c
 enum mgos_zvar_type mgos_zvar_get_type(mgos_zvarc_t var);
 ```
-Returns the variable [data-type](https://github.com/zendiy-mgos/zvar#enum-mgos_zvar_get_type). if the variable is a dictionary, returns `MGOS_ZVAR_TYPE_DIC`.
+Returns the variable [data-type](https://github.com/zendiy-mgos/zvar#enum-mgos_zvar_get_type). Returns `MGOS_ZVAR_TYPE_DIC` if the variable is a dictionary.
 
 |Parameter||
 |--|--|
@@ -54,7 +52,7 @@ Returns the variable [data-type](https://github.com/zendiy-mgos/zvar#enum-mgos_z
 ```c
 mgos_zvar_t mgos_zvar_new();
 ```
-Creates a variable and initializes it to `NULL`, with no data-type defined. Returns `NULL` if error. 
+Creates a variable and initializes it to `NULL`, with no data-type defined. Returns `NULL` if error. The returned instance must be deallocated using `mgos_zvar_free`.
 ### mgos_zvar_new_integer(), mgos_zvar_new_bool(), mgos_zvar_new_decimal() and mgos_zvar_new_str()
 ```c       
 mgos_zvar_t mgos_zvar_new_integer(long value);
@@ -62,7 +60,7 @@ mgos_zvar_t mgos_zvar_new_bool(bool value);
 mgos_zvar_t mgos_zvar_new_decimal(double value);
 mgos_zvar_t mgos_zvar_new_str(const char *value);
 ```
-Creates and initializes a variable. Returns `NULL` if error. Invoking `mgos_zvar_new_str(NULL)` is equivalent to `mgos_zvar_new()`.
+Creates and initializes a variable. Returns `NULL` if error. Invoking `mgos_zvar_new_str(NULL)` is equivalent to `mgos_zvar_new()`. The returned instance must be deallocated using `mgos_zvar_free`.
 
 |Parameter||
 |--|--|
@@ -196,3 +194,6 @@ Deallocates the variable. If the variable is an element of a dictionary, it is a
 |Parameter||
 |--|--|
 |var|Variant variable.|
+## To Do
+- Implement variant array.
+- Implement javascript APIs for [Mongoose OS MJS](https://github.com/mongoose-os-libs/mjs).

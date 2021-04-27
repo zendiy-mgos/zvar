@@ -1,6 +1,6 @@
 author: ZenDIY
 type: lib
-description: Mongoose OS library implementing ZenVar variant object.
+description: This Mongoose OS library allows you to create variant variables which haven't data type declared explicitly.
 version: 1.0
 
 sources:
