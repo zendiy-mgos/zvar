@@ -28,7 +28,7 @@ mgos_zvar_t b = mgos_zvar_new_bool(true);         // bool b = true;
 mgos_zvar_t d = mgos_zvar_new_decimal(101.99);    // double d = 101.99;
 mgos_zvar_t s = mgos_zvar_new_str("Lorem Ipsum"); // char *s = "Lorem Ipsum";
 ```
-## C/C++ API Reference
+## C/C++ APIs Reference
 ### enum mgos_zvar_type
 ```c
 enum mgos_zvar_type {
@@ -49,12 +49,12 @@ Returns the variable [data-type](https://github.com/zendiy-mgos/zvar#enum-mgos_z
 |Parameter||
 |--|--|
 |var|A variant variable.|
-### mgos_zvar_new()
+### mgos_zvar_new
 ```c
 mgos_zvar_t mgos_zvar_new();
 ```
 Creates a type-less variable (with no data-type defined). Returns `NULL` if error. The returned instance must be deallocated using `mgos_zvar_free`.
-### mgos_zvar_new_integer(), mgos_zvar_new_bool(), mgos_zvar_new_decimal() and mgos_zvar_new_str()
+### mgos_zvar_new_integer, mgos_zvar_new_bool, mgos_zvar_new_decimal and mgos_zvar_new_str
 ```c       
 mgos_zvar_t mgos_zvar_new_integer(long value);
 mgos_zvar_t mgos_zvar_new_bool(bool value);
@@ -66,7 +66,7 @@ Creates and initializes a variable. Returns `NULL` if error. Invoking `mgos_zvar
 |Parameter||
 |--|--|
 |value|Value to be set.|
-### mgos_zvar_set_null()
+### mgos_zvar_set_null
 ```c 
 void mgos_zvar_set_null(mgos_zvar_t var);
 ```
@@ -75,7 +75,7 @@ Sets a variable as type-less (with no data-type defined).
 |Parameter||
 |--|--|
 |var|A variant variable.|
-### mgos_zvar_set_integer(), mgos_zvar_set_bool(), mgos_zvar_set_decimal() and mgos_zvar_set_str()
+### mgos_zvar_set_integer, mgos_zvar_set_bool, mgos_zvar_set_decimal and mgos_zvar_set_str
 ```c                                 
 void mgos_zvar_set_integer(mgos_zvar_t var, long value);
 void mgos_zvar_set_bool(mgos_zvar_t var, bool value);
@@ -88,7 +88,7 @@ Sets a variable value and data-type. Invoking `mgos_zvar_set_str(var, NULL)` is 
 |--|--|
 |var|A variant variable.|
 |value|Value to set.|
-### mgos_zvar_set_nstr()
+### mgos_zvar_set_nstr
 ```c 
 void mgos_zvar_set_nstr(mgos_zvar_t var, const char *value, size_t value_len);
 ```
@@ -99,7 +99,7 @@ Sets a variable value to the provided string. This is a specialized version of `
 |var|A variant variable.|
 |value|String value to set.|
 |value_len|Maximum number of characters to set. Ignored if `value` parameter is `NULL`.|
-### mgos_zvar_get_integer(), mgos_zvar_get_bool(), mgos_zvar_get_decimal() and mgos_zvar_get_str()
+### mgos_zvar_get_integer, mgos_zvar_get_bool, mgos_zvar_get_decimal and mgos_zvar_get_str
 ```c 
 long mgos_zvar_get_integer(mgos_zvarc_t var);
 bool mgos_zvar_get_bool(mgos_zvarc_t var);
@@ -121,7 +121,7 @@ The returned value depends on the input variable data-type. Please refer to deta
 |mgos_zvar_get_bool|Returns `false` if input value is `0`|Returns the boolean value|Returns `false` if input value is `0.0`|Returns `false` if input string is empty|Returns `false`|
 |mgos_zvar_get_decimal|Returns the input value as decimal|Returns `0.0`|Returns the decimal value|Returns `0.0`|Returns `0.0`|
 |mgos_zvar_get_str|Returns `NULL`|Returns `NULL`|Returns `NULL`|Returns the string value|Returns `NULL`|
-### mgos_zvar_cmp()
+### mgos_zvar_cmp
 ```c
 int mgos_zvar_cmp(mgos_zvarc_t var1, mgos_zvarc_t var2);
 ```
@@ -140,7 +140,7 @@ Returns an integer value indicating the relationship between the variables:
 |<0|The value of *var1* is minor than the value of *var2*. If one or both of the variables are dictionaries, they are not equal.|
 |0|The two variables are equal. If both of the variables are dictionaries, they contain the same keys, regardless their order.|
 |>0|The value of *var1* is minor than the value of *var2*.|
-### mgos_zvar_is_null()
+### mgos_zvar_is_null
 ```c
 bool mgos_zvar_is_null(mgos_zvarc_t var);
 ```
@@ -149,7 +149,7 @@ Returns `true` if the variable value is type-less (with no data-type defined), o
 |Parameter||
 |--|--|
 |var|A variant variable.|
-### mgos_zvar_copy()
+### mgos_zvar_copy
 ```c
 bool mgos_zvar_copy(mgos_zvarc_t src_var, mgos_zvar_t dest_var); 
 ```
@@ -159,7 +159,7 @@ Copies a source variable into the destination one. Returns `true` if successfull
 |--|--|
 |src_var|Source variant variable.|
 |dest_var|Destination variant variable.|
-### mgos_zvar_length()
+### mgos_zvar_length
 ```c
 int mgos_zvar_length(mgos_zvarc_t var); 
 ```
@@ -168,7 +168,7 @@ Returns the number of items in a dictionary or the string length. Returns `0` in
 |Parameter||
 |--|--|
 |var|A variant variable.|
-### mgos_zvar_set_unchanged()
+### mgos_zvar_set_unchanged
 ```c
 void mgos_zvar_set_unchanged(mgos_zvar_t var);
 ```
@@ -177,7 +177,7 @@ Marks the variable as unchanged. This function could be used in combination with
 |Parameter||
 |--|--|
 |var|A variant variable.|
-### mgos_zvar_is_changed()
+### mgos_zvar_is_changed
 ```c
 bool mgos_zvar_is_changed(mgos_zvarc_t var);
 ```
@@ -186,7 +186,7 @@ Returns `true` if the variable value is changed since its creation or since the 
 |Parameter||
 |--|--|
 |var|A variant variable.|
-### mgos_zvar_free()
+### mgos_zvar_free
 ```c
 void mgos_zvar_free(mgos_zvar_t var);
 ```
