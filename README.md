@@ -53,7 +53,7 @@ Returns the variable [data-type](#enum-mgos_zvar_type). Returns `MGOS_ZVAR_TYPE_
 ```c
 mgos_zvar_t mgos_zvar_new();
 ```
-Creates a type-less variable (with no data-type defined). Returns `NULL` if error. The returned instance must be deallocated using `mgos_zvar_free`.
+Creates a type-less variable (with no data-type defined). Returns `NULL` if error. The returned instance must be deallocated using `mgos_zvar_free()`.
 ### mgos_zvar_new_integer | mgos_zvar_new_bool | mgos_zvar_new_decimal | mgos_zvar_new_str
 ```c       
 mgos_zvar_t mgos_zvar_new_integer(long value);
