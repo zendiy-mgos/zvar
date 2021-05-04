@@ -92,7 +92,7 @@ Sets a variable value and data-type. Invoking `mgos_zvar_set_str(var, NULL)` is 
 ```c 
 void mgos_zvar_set_nstr(mgos_zvar_t var, const char *value, size_t value_len);
 ```
-Sets a variable value to the provided string. This is a specialized version of `mgos_zvar_set_str` Invoking `mgos_zvar_set_nstr(var, NULL, <any_value>)` is equivalent to `mgos_zvar_set_null(var)`.
+Sets a variable value to the provided string. This is a specialized version of `mgos_zvar_set_str()` Invoking `mgos_zvar_set_nstr(var, NULL, <any_value>)` is equivalent to `mgos_zvar_set_null(var)`.
 
 |Parameter||
 |--|--|
@@ -172,7 +172,7 @@ Returns the number of items in a dictionary or the string length. Returns `0` in
 ```c
 void mgos_zvar_set_unchanged(mgos_zvar_t var);
 ```
-Marks the variable as unchanged. This function could be used in combination with `mgos_zvar_is_changed`.
+Marks the variable as unchanged. This function could be used in combination with `mgos_zvar_is_changed()`.
 
 |Parameter||
 |--|--|
@@ -181,7 +181,7 @@ Marks the variable as unchanged. This function could be used in combination with
 ```c
 bool mgos_zvar_is_changed(mgos_zvarc_t var);
 ```
-Returns `true` if the variable value is changed since its creation or since the last call of `mgos_zvar_set_unchanged`, or `false` otherwise.
+Returns `true` if the variable value is changed since its creation or since the last call of `mgos_zvar_set_unchanged()`, or `false` otherwise.
 
 |Parameter||
 |--|--|
