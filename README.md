@@ -75,7 +75,7 @@ Sets a variable as type-less (with no data-type defined).
 |Parameter||
 |--|--|
 |var|A variant variable.|
-### mgos_zvar_set_integer, mgos_zvar_set_bool, mgos_zvar_set_decimal and mgos_zvar_set_str
+### mgos_zvar_set_integer | mgos_zvar_set_bool | mgos_zvar_set_decimal | mgos_zvar_set_str
 ```c                                 
 void mgos_zvar_set_integer(mgos_zvar_t var, long value);
 void mgos_zvar_set_bool(mgos_zvar_t var, bool value);
@@ -99,7 +99,7 @@ Sets a variable value to the provided string. This is a specialized version of `
 |var|A variant variable.|
 |value|String value to set.|
 |value_len|Maximum number of characters to set. Ignored if `value` parameter is `NULL`.|
-### mgos_zvar_get_integer, mgos_zvar_get_bool, mgos_zvar_get_decimal and mgos_zvar_get_str
+### mgos_zvar_get_integer | mgos_zvar_get_bool | mgos_zvar_get_decimal | mgos_zvar_get_str
 ```c 
 long mgos_zvar_get_integer(mgos_zvarc_t var);
 bool mgos_zvar_get_bool(mgos_zvarc_t var);
