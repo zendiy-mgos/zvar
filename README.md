@@ -40,7 +40,7 @@ enum mgos_zvar_type {
 };
 ```
 ZenVar variant data-types.
-### mgos_zvar_get_type()
+### mgos_zvar_get_type
 ```c
 enum mgos_zvar_type mgos_zvar_get_type(mgos_zvarc_t var);
 ```
